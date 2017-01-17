@@ -1,0 +1,130 @@
+//********************************************
+//* Project: hznavbar
+//* File: _hz-navbar.theme
+//* Description: Theme maker
+//*********************************************
+@mixin hz-navbar__theme-maker(
+    $BC-navbar,
+    $TC-bar,
+    $TC-home,
+    $TC-index,
+    $TC-pager-btn,
+    $TC-pager-pages,
+    $BC-bar,
+    $BC-bar-value,
+    $BR-bar:$BC-bar,
+    $TM-animation:$config_animate-mid,
+    $TC-home--hover:$TC-home,
+    $TC-index--hover:$TC-index,
+    $TC-home-icon:$TC-home,
+    $TC-index-icon:$TC-index,
+    $TC-home-icon--hover:$TC-home-icon,
+    $TC-index-icon--hover:$TC-index-icon
+) {
+    .hz-navbar {
+        background-color: $BC-navbar;
+        .hz-navbar__progress-percentage {
+            color: $TC-bar;
+        }
+        .hz-navbar__btn {
+            transition: all $TM-animation ease;
+            .hz-navbar__content {
+                position: absolute;
+                top: 0;
+                left: -99999em;
+            }
+            &:not([disabled]) {
+                &:hover,
+                &:focus {
+                    transform: scale(1.2);
+                }
+            }
+            &[disabled] {
+                opacity: 0.5;
+                cursor: default;
+            }
+        }
+        //progress
+        .hz-navbar__progress-bar {
+            border: 2px solid $BR-bar;
+            background-color: $BC-bar;
+        }
+        .hz-navbar__progress-value {
+            transition: all $TM-animation ease;
+            background-color: $BC-bar-value;
+        }
+        //actions
+        .hz-navbar__actions {
+            .hz-navbar__btn {
+                font-size: em(16);
+                &:after {
+                    transition: all $TM-animation ease;
+                    font: {
+                        family: FontAwesome;
+                        size: em(28, 16);
+                    }
+                }
+            }
+        }
+        .hz-navbar__action-home {
+            color: $TC-home;
+            &:not([disabled]) {
+                &:hover,
+                &:focus {
+                    color: $TC-home--hover;
+                    &:after {
+                        color: $TC-home-icon--hover;
+                    }
+                }
+            }
+            &:after {
+                content: "\f015";
+                color: $TC-home-icon;
+            }
+        }
+        .hz-navbar__action-index {
+            color: $TC-index;
+            &:not([disabled]) {
+                &:hover,
+                &:focus {
+                    color: $TC-index--hover;
+                    &:after {
+                        color: $TC-index-icon--hover;
+                    }
+                }
+            }
+            &:after {
+                content: "\f0ca";
+                color: $TC-index-icon;
+            }
+        }
+        //pager
+        .hz-navbar__pager {
+            .hz-navbar__btn {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                color: $TC-pager-btn;
+                &:after {
+                    font: {
+                        family: FontAwesome;
+                        size: em(30);
+                    }
+                }
+                &.hz-navbar__prev {
+                    &:after {
+                        content: "\f053";
+                    }
+                }
+                &.hz-navbar__next {
+                    &:after {
+                        content: "\f054";
+                    }
+                }
+            }
+        }
+        .hz-navbar__pages {
+            color: $TC-pager-pages;
+        }
+    }
+}

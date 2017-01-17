@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <link type="text/css" rel="stylesheet" href="./main.css">
+        <script src="../../../jspm_packages/system.js"></script>
+        <script src="../../../config.js"></script>
+        <script>SystemJS.import("./index.js");</script>
+    </head>
+    <body>
+        <main data-hz-app>
+            <div data-hz-pages></div>
+            <div class="hz-navbar" data-hz-component="HzNavbar">
+                <div class="hz-navbar__progress">
+                    <div class="hz-navbar__progress-bar">
+                        <div class="hz-navbar__progress-mask" data-bar="data-bar"></div>
+                        <div class="hz-navbar__progress-value" data-bar="data-bar"></div>
+                    </div>
+                    <div class="hz-navbar__content hz-navbar__progress-percentage" data-progress="data-progress">0%</div>
+                </div>
+                <div class="hz-navbar__actions">
+                    <button class="hz-navbar__btn hz-navbar__action-home" data-home="data-home">
+                        <span class="hz-navbar__content">Inicio</span>
+                    </button>
+                    <button class="hz-navbar__btn hz-navbar__action-index" data-index="data-index">
+                        <span class="hz-navbar__content">Indice</span>
+                    </button>
+                </div>
+                <div class="hz-navbar__pager">
+                    <button class="hz-navbar__btn hz-navbar__prev" data-prev="data-prev">
+                        <span class="hz-navbar__content">Anterior</span>
+                    </button>
+                    <p class="hz-navbar__pages">
+                        <span class="hz-navbar__content hz-navbar__current" data-current="data-current">1</span>
+                        <span class="hz-navbar__content hz-navbar__total" data-total="data-total">12</span>
+                    </p>
+                    <button class="hz-navbar__btn hz-navbar__next" data-next="data-next">
+                        <span class="hz-navbar__content">Siguiente</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

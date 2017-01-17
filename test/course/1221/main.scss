@@ -1,0 +1,27 @@
+/* Estilos de prueba. NO UTILIZAR en proyecto*/
+/* Common */
+@import "../../assets/styles/common/config";
+@import "../../assets/styles/common/function";
+@import "../../assets/styles/common/reset";
+@import "../../assets/styles/common/colors";
+/* End common */
+/* Components */
+body {
+    width: 80%;
+    margin: 0 auto;
+    padding: 1em;
+}
+
+@import "../../../src/hz-navbar.structure";
+@import "../../../src/hz-navbar.theme";
+@include hz-navbar__theme-maker(
+        $BC-navbar: rgba(0, 0, 0, 0.5),
+        $TC-bar: #fff,
+        $TC-home: #fff,
+        $TC-index: #fff,
+        $TC-pager-btn: #fff,
+        $TC-pager-pages: #fff,
+        $BC-bar: #999,
+        $BC-bar-value: #ddd
+)
+/* End components */

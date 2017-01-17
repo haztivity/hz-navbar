@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "es5",
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "typeRoots": [
+            "../node_modules/@types",
+            "../jspm_packages/npm/bottlejs@1.5.0/dist"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "jspm_packages"
+    ]
+}

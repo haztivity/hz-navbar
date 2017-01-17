@@ -1,0 +1,70 @@
+//********************************************
+//* Project: hznavbar
+//* File: _hz-navbar.structure
+//* Description: Estilos básicos de navbar
+//*********************************************
+/* _hz-navbar.structure */
+.hz-navbar {
+    display: flex;
+    padding: em(12);
+    align-items: center;
+    //Reset browser button styles
+    .hz-navbar__btn {
+        margin: 0;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        background: none;
+        outline: none;
+    }
+    .hz-navbar__progress {
+        width: 33.3%;
+        display: flex;
+        align-items: center;
+    }
+    .hz-navbar__progress-mask {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+    }
+    .hz-navbar__progress-bar {
+        height: em(18);
+        width: 75%;
+        position: relative;
+    }
+    .hz-navbar__progress-value {
+        height: 100%;
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+    .hz-navbar__progress-percentage {
+        margin-left: em(6);
+    }
+    .hz-navbar__actions {
+        display: flex;
+        width: 33.3%;
+        justify-content: center;
+        .hz-navbar__btn {
+            margin: 0 em(6);
+        }
+    }
+    .hz-navbar__pager {
+        display: flex;
+        align-items: center;
+        width: 33.3%;
+        justify-content: flex-end;
+    }
+    .hz-navbar__pages {
+        padding: 0 em(6);
+    }
+    .hz-navbar__total {
+        &:before {
+            content: "/";
+        }
+    }
+}
+
+/* End _hz-navbar.structure */
