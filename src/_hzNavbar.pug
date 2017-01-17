@@ -2,19 +2,19 @@ mixin hzNavbar()
     div.hz-navbar(data-hz-component="HzNavbar")
         div.hz-navbar__progress
             div.hz-navbar__progress-bar
-                div(data-bar).hz-navbar__progress-mask
-                div(data-bar).hz-navbar__progress-value
-            div(data-progress).hz-navbar__content.hz-navbar__progress-percentage 0%
+                div.hz-navbar__progress-mask
+                div(data-hz-navbar-bar).hz-navbar__progress-value
+            div(data-hz-navbar-progress).hz-navbar__content.hz-navbar__progress-percentage 0%
         div.hz-navbar__actions
-            button(data-home).hz-navbar__btn.hz-navbar__action-home
+            button(data-hz-navbar-home).hz-navbar__btn.hz-navbar__action-home
                 span.hz-navbar__content Inicio
-            button(data-index).hz-navbar__btn.hz-navbar__action-index
+            button(data-hz-navbar-index).hz-navbar__btn.hz-navbar__action-index
                 span.hz-navbar__content Indice
         div.hz-navbar__pager
-            button(data-prev).hz-navbar__btn.hz-navbar__prev
+            button(data-hz-navbar-prev).hz-navbar__btn.hz-navbar__prev
                 span.hz-navbar__content Anterior
             p.hz-navbar__pages
-                span(data-current).hz-navbar__content.hz-navbar__current 1
-                span(data-total).hz-navbar__content.hz-navbar__total 12
-            button(data-next).hz-navbar__btn.hz-navbar__next
+                span(data-hz-navbar-current).hz-navbar__content.hz-navbar__current 1
+                span(data-hz-navbar-total).hz-navbar__content.hz-navbar__total 12
+            button(data-hz-navbar-next).hz-navbar__btn.hz-navbar__next
                 span.hz-navbar__content Siguiente
