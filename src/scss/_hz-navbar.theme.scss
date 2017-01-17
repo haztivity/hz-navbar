@@ -1,25 +1,25 @@
 //********************************************
 //* Project: hznavbar
 //* File: _hz-navbar.theme
-//* Description: Theme maker
+//* Description: Generador de temas
 //*********************************************
 @mixin hz-navbar__theme-maker(
-    $BC-navbar,
-    $TC-bar,
-    $TC-home,
-    $TC-index,
-    $TC-pager-btn,
-    $TC-pager-pages,
-    $BC-bar,
-    $BC-bar-value,
-    $BR-bar:none,
-    $TM-animation:$config_animate-mid,
-    $TC-home--hover:$TC-home,
-    $TC-index--hover:$TC-index,
-    $TC-home-icon:$TC-home,
-    $TC-index-icon:$TC-index,
-    $TC-home-icon--hover:$TC-home-icon,
-    $TC-index-icon--hover:$TC-index-icon
+    $BC-navbar,//fondo general
+    $TC-bar,//texto del % de progreso
+    $TC-home,//texto de home
+    $TC-index,//texto de índice
+    $TC-pager-btn,//texto de los botones del paginador
+    $TC-pager-pages,//texto de las páginas
+    $BC-bar,//fondo de la barra de progreso
+    $BC-bar-value,//fondo de la barra de progreso con valor
+    $BR-bar:none,//borde de la barra de progreso
+    $TM-animation:$config_animate-mid,//tiempo de animación
+    $TC-home--hover:$TC-home,//texto de home en hover
+    $TC-index--hover:$TC-index,//texto de índice en hover
+    $TC-home-icon:$TC-home,//icono de home
+    $TC-index-icon:$TC-index,//icono de índice
+    $TC-home-icon--hover:$TC-home-icon,//icono de home en hover
+    $TC-index-icon--hover:$TC-index-icon//icono de índice en hover
 ) {
     .hz-navbar {
         background-color: $BC-navbar;

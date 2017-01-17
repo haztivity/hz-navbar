@@ -12,8 +12,8 @@ body {
     padding: 1em;
 }
 
-@import "../../../src/hz-navbar.structure";
-@import "../../../src/hz-navbar.theme";
+@import "../../../src/scss/_hz-navbar.structure";
+@import "../../../src/scss/_hz-navbar.theme";
 @include hz-navbar__theme-maker(
         $BC-navbar: rgba(0, 0, 0, 0.5),
         $TC-bar: #fff,
