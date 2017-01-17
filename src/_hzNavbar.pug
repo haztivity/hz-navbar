@@ -4,17 +4,17 @@ mixin hzNavbar()
             div.hz-navbar__progress-bar
                 div.hz-navbar__progress-mask
                 div(data-hz-navbar-bar).hz-navbar__progress-value
-            div(data-hz-navbar-progress).hz-navbar__content.hz-navbar__progress-percentage 0%
+            div(data-hz-navbar-progress).hz-navbar__content.hz-navbar__progress-percentage
         div.hz-navbar__actions
-            button(data-hz-navbar-home).hz-navbar__btn.hz-navbar__action-home
-                span.hz-navbar__content Inicio
-            button(data-hz-navbar-index).hz-navbar__btn.hz-navbar__action-index
-                span.hz-navbar__content Indice
+            button(data-hz-navbar-home, data-hz-navbar-content="home", data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__action-home
+                span(data-hz-navbar-content="home").hz-navbar__content
+            button(data-hz-navbar-index, data-hz-navbar-content="index", data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__action-index
+                span(data-hz-navbar-content="index").hz-navbar__content
         div.hz-navbar__pager
-            button(data-hz-navbar-prev).hz-navbar__btn.hz-navbar__prev
-                span.hz-navbar__content Anterior
+            button(data-hz-navbar-prev,data-hz-navbar-content="prev",data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__prev
+                span(data-hz-navbar-content="prev").hz-navbar__content
             p.hz-navbar__pages
-                span(data-hz-navbar-current).hz-navbar__content.hz-navbar__current 1
-                span(data-hz-navbar-total).hz-navbar__content.hz-navbar__total 12
-            button(data-hz-navbar-next).hz-navbar__btn.hz-navbar__next
-                span.hz-navbar__content Siguiente
+                span(data-hz-navbar-current, data-hz-navbar-content-to="title", data-hz-navbar-content="currentPage").hz-navbar__content.hz-navbar__current
+                span(data-hz-navbar-total, data-hz-navbar-content-to="title", data-hz-navbar-content="totalPages").hz-navbar__content.hz-navbar__total
+            button(data-hz-navbar-next,data-hz-navbar-content="next",data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__next
+                span(data-hz-navbar-content="next").hz-navbar__content

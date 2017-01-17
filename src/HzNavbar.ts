@@ -26,6 +26,19 @@ import {
 export class HzNavbarComponent extends ComponentController {
     public static readonly NAMESPACE = "hzNavbar";
     protected static readonly PREFIX = "hz-navbar";
+    protected static readonly _DEFAULTS = {
+        locale: {
+            "es": {
+                next: "Siguiente",
+                prev: "Anterior",
+                currentPage: "Página actual",
+                totalPages: "Páginas totales",
+                home: "Ir al inicio",
+                index: "Mostrar índice"
+            }
+        },
+        defaultLang: "es"
+    };
     protected _$nextBtn: JQuery;
     protected _$prevBtn: JQuery;
     protected _$bar: JQuery;
@@ -41,14 +54,14 @@ export class HzNavbarComponent extends ComponentController {
         super(_$, _EventEmitterFactory);
     }
 
-    init(options) {
+    init(options, config?) {
+        this._options = $.extend(true, {}, HzNavbarComponent._DEFAULTS, options);
         this._getElements();
+        this.updateLocale();
         this.progress(0);
         this._assignEvents();
         this.updatePaginator();
-
     }
-
     public updatePaginator() {
         let numPages = this._PageManager.count();
         this._setNumPages(numPages);
@@ -76,6 +89,51 @@ export class HzNavbarComponent extends ComponentController {
         }
     }
 
+    /**
+     * Establece un idioma
+     * @param {string}  lang        Idioma. Si no tiene traducciones en options.locale se utiliza el idioma por defecto
+     */
+    public setLang(lang) {
+        this._options.lang = lang;
+        this.updateLocale();
+    }
+
+    /**
+     * Actualiza las traducciones
+     */
+    public updateLocale() {
+        let lang = this._options.lang,
+            locale = this._options.locale[lang] || this._options.locale[this._options.defaultLang];
+        if (locale) {
+            for (let key in locale) {
+                this._updateText(key, locale[key]);
+            }
+        }
+    }
+
+    /**
+     * Establece un texto en uno o varios elementos
+     * @param {string}      to      Se buscan los elementos que correspondan con el selector [data-hz-navbar-content=valor]
+     * @param {string}      text    Texto a establecer
+     * @private
+     */
+    protected _updateText(to, text) {
+        if (to) {
+            let $element = this._$element.find(`[data-hz-navbar-content=${to}]`);
+            if ($element.length > 0) {
+                for (let elementIndex = 0, $elementLength = $element.length; elementIndex < $elementLength; elementIndex++) {
+                    let $currentElement = $($element[elementIndex]);
+                    let attr = $currentElement.data("hzNavbarContentTo") || "text";
+                    if (attr === "text") {
+                        $currentElement.text(text);
+                    } else {
+                        $currentElement.attr(attr, text);
+                    }
+                }
+
+            }
+        }
+    }
     /**
      * Obtiene los elementos del DOM a utilizar
      * @protected
