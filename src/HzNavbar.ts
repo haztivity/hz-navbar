@@ -12,6 +12,16 @@ import {
     PageManager,
     PageController
 } from "davinchi_finsi";
+import {
+    $,
+    Navigator,
+    INavigatorPageData,
+    Component,
+    ComponentController,
+    EventEmitterFactory,
+    PageManager,
+    PageController
+} from "../jspm_packages/local/core@0.0.1/core";
 @Component(
     {
         name: "HzNavbar",
@@ -211,14 +221,17 @@ export class HzNavbarComponent extends ComponentController {
      * @private
      */
     protected _onPageChangeStart(e, newPage: INavigatorPageData, oldPage: INavigatorPageData) {
-        let instance = e.data.instance;
-        if (oldPage) {
-            let pageImplementation = instance._PageManager.getPage(oldPage.index),
-                page = pageImplementation.getPage();
-            page.off("." + HzNavbarComponent.NAMESPACE);
+        if (!e.isDefaultPrevented()) {
+            let instance = e.data.instance;
+            if (oldPage) {
+                let pageImplementation = instance._PageManager.getPage(oldPage.index),
+                    page = pageImplementation.getPage();
+                page.off("." + HzNavbarComponent.NAMESPACE);
+            }
+            instance._setCurrentPage(newPage.index);
+            instance._$prevBtn.attr("disabled", "disabled");
+            instance._$nextBtn.attr("disabled", "disabled");
         }
-        instance._$prevBtn.attr("disabled", "disabled");
-        instance._$nextBtn.attr("disabled", "disabled");
     }
 
     /**
@@ -259,11 +272,10 @@ export class HzNavbarComponent extends ComponentController {
      */
     protected _onPageChangeEnd(e, newPage: INavigatorPageData, oldPage: INavigatorPageData) {
         let instance = e.data.instance;
-        instance._setCurrentPage(newPage.index);
         instance._updatePagerButtonState();
+        instance.progress((instance._Navigator.getVisitedPages().length * 100) / instance._numPages);
         let pageImplementation = instance._Navigator.getCurrentPage(),
             page = pageImplementation.getPage();
-        instance.progress((instance._Navigator.getVisitedPages().length * 100) / instance._numPages);
         page.off("." + HzNavbarComponent.NAMESPACE).on(
             `${PageController.ON_COMPLETE_CHANGE}.${HzNavbarComponent.NAMESPACE}`,
             {instance: instance},

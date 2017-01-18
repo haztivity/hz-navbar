@@ -2,7 +2,8 @@
     "name": "@haztivity/navbar",
     "version": "0.0.1",
     "description": "Componente de navegación para haztivity",
-    "main": "dist/HzNavbar.js",
+    "main": "index.js",
+    "module": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -51,14 +52,17 @@
     },
     "jspm": {
         "registry": "jspm",
+        "main": "HzNavbar.js",
+        "directories": {
+            "lib": "src"
+        },
         "dependencies": {
-            "css": "github:systemjs/plugin-css@^0.1.32",
-            "davinchi_finsi": "local:core@^0.0.1",
-            "font-awesome": "npm:font-awesome@^4.7.0",
-            "json": "github:systemjs/plugin-json@^0.2.3",
-            "text": "github:systemjs/plugin-text@^0.0.9"
+            "davinchi_finsi": "local:core@^0.0.1"
         },
         "devDependencies": {
+            "css": "github:systemjs/plugin-css@^0.1.32",
+            "json": "github:systemjs/plugin-json@^0.2.3",
+            "text": "github:systemjs/plugin-text@^0.0.9",
             "typescript": "npm:typescript@^2.0.7"
         }
     }

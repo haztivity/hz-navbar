@@ -2,15 +2,12 @@
  * @license
  * Copyright Davinchi. All Rights Reserved.
  */
-import {PageFactory, Page, PageController} from "davinchi_finsi";
-import template from "./6611.html!text";
-import {HzButton} from "../../../../resources/hzButton/hzButton";
+import {PageFactory, Page, PageController} from "davinchi_finsi/core";
+import template from "./6613.html!text";
 let page: Page = PageFactory.createPage(
     {
-        name: "6611",
-        resources: [
-            HzButton
-        ],
+        name: "6613",
+        resources: [],
         template: template
     }
 );
@@ -20,11 +17,8 @@ page.on(
     }
 );
 page.on(
-    PageController.ON_RENDERED, null, (eventObject, $page: JQuery, pageController: PageController) => {
+    PageController.ON_RENDERED, null, (eventObject, template, pageController) => {
         console.log(`${pageController.options.name} rendered`);
-        if (pageController.isCompleted()) {
-            $page.find("#myResource").data("hzResourceInstance").disable();
-        }
     }
 );
 page.on(
@@ -38,8 +32,8 @@ page.on(
     }
 );
 page.on(
-    PageController.ON_COMPLETE_CHANGE, null, (eventObject, isCompleted, $page, pageController) => {
-        console.log(`${pageController.options.name} complete change`);
+    PageController.ON_COMPLETE, null, (eventObject, $page, pageController) => {
+        console.log(`${pageController.options.name} complete`);
     }
 );
 page.on(
@@ -47,4 +41,4 @@ page.on(
         console.log(`${pageController.options.name} destroy`);
     }
 );
-export {page as page6611};
+export {page as page6613};
