@@ -7,6 +7,7 @@ import template from "./6611.html!text";
 import {HzButton} from "../../../../resources/hzButton/hzButton";
 let page: Page = PageFactory.createPage(
     {
+        title: "Página 6611",
         name: "6611",
         resources: [
             HzButton

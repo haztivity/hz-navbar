@@ -13,6 +13,7 @@ System.register(["@haztivity/core", "./6613.html!text"], function (exports_1, co
         ],
         execute: function () {
             page = core_1.PageFactory.createPage({
+                title: "Página 6613",
                 name: "6613",
                 resources: [],
                 template: _6613_html_text_1.default

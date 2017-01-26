@@ -6,6 +6,7 @@ import {PageFactory, Page, PageController} from "@haztivity/core";
 import template from "./6612.html!text";
 let page: Page = PageFactory.createPage(
     {
+        title: "Página 6612",
         name: "6612",
         resources: [],
         template: template

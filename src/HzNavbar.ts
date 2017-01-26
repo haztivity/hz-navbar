@@ -10,8 +10,12 @@ import {
     ComponentController,
     EventEmitterFactory,
     PageManager,
-    PageController
+    PageController,
+    DataOptions
 } from "@haztivity/core";
+import * as dialog from "jquery-ui/ui/widgets/dialog";
+dialog;
+
 @Component(
     {
         name: "HzNavbar",
@@ -19,13 +23,33 @@ import {
             $,
             EventEmitterFactory,
             Navigator,
-            PageManager
+            PageManager,
+            DataOptions
         ]
     }
 )
 export class HzNavbarComponent extends ComponentController {
     public static readonly NAMESPACE = "hzNavbar";
     protected static readonly PREFIX = "hz-navbar";
+    public static readonly PREFIX_LIST_DIALOG_OPTIONS = `${HzNavbarComponent.NAMESPACE}Dialog`;
+    public static readonly QUERY_ACTION_NEXT = `[data-${HzNavbarComponent.PREFIX}-next]`;
+    public static readonly QUERY_ACTION_PREV = `[data-${HzNavbarComponent.PREFIX}-prev]`;
+    public static readonly QUERY_BAR = `[data-${HzNavbarComponent.PREFIX}-bar]`;
+    public static readonly QUERY_PROGRESS = `[data-${HzNavbarComponent.PREFIX}-progress]`;
+    public static readonly QUERY_ACTION_HOME = `[data-${HzNavbarComponent.PREFIX}-home]`;
+    public static readonly QUERY_ACTION_INDEX = `[data-${HzNavbarComponent.PREFIX}-index]`;
+    public static readonly QUERY_PAGE_CURRENT = `[data-${HzNavbarComponent.PREFIX}-current]`;
+    public static readonly QUERY_PAGE_TOTAL = `[data-${HzNavbarComponent.PREFIX}-total]`;
+    public static readonly QUERY_INDEX_LIST = `[data-${HzNavbarComponent.PREFIX}-index-list]`;
+    public static readonly QUERY_INDEX_LIST_ITEM = `[data-${HzNavbarComponent.PREFIX}-index-list-item]`;
+    public static readonly QUERY_INDEX_LIST_ITEM_CONTENT = `[data-${HzNavbarComponent.PREFIX}-index-list-item-content]`;
+    public static readonly CLASS_PAGE_VISITED = "hz-navbar__page--visited";
+    public static readonly CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
+    public static readonly CLASS_LIST_INDEX_DIALOG = "hz-navbar__index-list-dialog";
+    public static readonly DATA_PAGE = "hzNavbarPage";
+    protected static readonly OPT_DIALOG_DEFAULTS = {
+        autoOpen: false
+    };
     protected static readonly _DEFAULTS = {
         locale: {
             "es": {
@@ -34,7 +58,8 @@ export class HzNavbarComponent extends ComponentController {
                 currentPage: "Página actual",
                 totalPages: "Páginas totales",
                 home: "Ir al inicio",
-                index: "Mostrar índice"
+                showIndex: "Mostrar índice",
+                index: "Índice"
             }
         },
         defaultLang: "es"
@@ -47,10 +72,13 @@ export class HzNavbarComponent extends ComponentController {
     protected _$indexBtn: JQuery;
     protected _$currentPageIndex: JQuery;
     protected _$numPages: JQuery;
+    protected _$indexList: JQuery;
+    protected _$indexListItemTemplate: JQuery;
     protected _progress: number;
     protected _currentPageIndex: number = 0;
     protected _numPages: number = 0;
-    constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager) {
+
+    constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager, protected _DataOptions) {
         super(_$, _EventEmitterFactory);
     }
 
@@ -62,9 +90,11 @@ export class HzNavbarComponent extends ComponentController {
         this._assignEvents();
         this.updatePaginator();
     }
+
     public updatePaginator() {
         let numPages = this._PageManager.count();
         this._setNumPages(numPages);
+        this._generateIndex();
         let currentPage = this._Navigator.getCurrentPageIndex() || 0;
         this._setCurrentPage(currentPage);
     }
@@ -134,19 +164,92 @@ export class HzNavbarComponent extends ComponentController {
             }
         }
     }
+
+    public closeIndexList() {
+        if (this._indexListDialog) {
+            this._indexListDialog.close();
+        }
+    }
+
+    public indexListIsOpen() {
+        let result;
+        if (this._indexListDialog) {
+            result = this._indexListDialog.isOpen();
+            this._indexListDialog.open();
+        }
+        return result;
+    }
+
+    public openIndexList() {
+        if (this._indexListDialog) {
+            this.updateIndex();
+            this._indexListDialog.open();
+        }
+    }
+
+    protected _generateIndex() {
+        if (this._$indexList && this._$indexList.length > 0 && this._$indexListItemTemplate && this._$indexListItemTemplate.length > 0) {
+            this._$indexListItemTemplate.detach();
+            let options = $.extend(
+                {},
+                HzNavbarComponent.OPT_DIALOG_DEFAULTS,
+                this._DataOptions.getDataOptions(
+                    this._$indexList,
+                    HzNavbarComponent.PREFIX_LIST_DIALOG_OPTIONS
+                )
+            );
+            options.dialogClass = HzNavbarComponent.CLASS_LIST_INDEX_DIALOG;
+            this._$indexList.dialog(options);
+            this._indexListDialog = this._$indexList.data("ui-dialog");
+        }
+    }
+
+    public updateIndex() {
+        if (this._$indexList && this._$indexList.length > 0 && this._$indexListItemTemplate && this._$indexListItemTemplate.length > 0) {
+            this._$indexList.empty();
+            let pages = [];
+            let numPages = this._PageManager.count(),
+                previousState;
+            for (let numPageIndex = 0; numPageIndex < numPages; numPageIndex++) {
+                let currentPage = this._PageManager.getPage(numPageIndex),
+                    pageRegister = currentPage.getPage();
+                let $page: JQuery = this._$indexListItemTemplate.clone();
+                $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html(pageRegister._options.title);
+                if (currentPage._state.completed) {
+                    $page.addClass(HzNavbarComponent.CLASS_PAGE_COMPLETED);
+                } else if (currentPage._state.visited) {
+                    $page.addClass(HzNavbarComponent.CLASS_PAGE_VISITED);
+                }
+                if (previousState == undefined || previousState.completed) {
+                    $page.data(
+                        HzNavbarComponent.DATA_PAGE, {
+                            name: pageRegister.getName(),
+                            index: numPageIndex
+                        }
+                    );
+                }
+                previousState = currentPage._state;
+                pages.push($page);
+            }
+            this._$indexList.append(pages);
+        }
+    }
+
     /**
      * Obtiene los elementos del DOM a utilizar
      * @protected
      */
     protected _getElements() {
-        this._$nextBtn = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-next]`);
-        this._$prevBtn = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-prev]`);
-        this._$bar = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-bar]`);
-        this._$progress = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-progress]`);
-        this._$homeBtn = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-home]`);
-        this._$indexBtn = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-index]`);
-        this._$currentPageIndex = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-current]`);
-        this._$numPages = this._$element.find(`[data-${HzNavbarComponent.PREFIX}-total]`);
+        this._$nextBtn = this._$element.find(HzNavbarComponent.QUERY_ACTION_NEXT);
+        this._$prevBtn = this._$element.find(HzNavbarComponent.QUERY_ACTION_PREV);
+        this._$bar = this._$element.find(HzNavbarComponent.QUERY_BAR);
+        this._$progress = this._$element.find(HzNavbarComponent.QUERY_PROGRESS);
+        this._$homeBtn = this._$element.find(HzNavbarComponent.QUERY_ACTION_HOME);
+        this._$indexBtn = this._$element.find(HzNavbarComponent.QUERY_ACTION_INDEX);
+        this._$currentPageIndex = this._$element.find(HzNavbarComponent.QUERY_PAGE_CURRENT);
+        this._$numPages = this._$element.find(HzNavbarComponent.QUERY_PAGE_TOTAL);
+        this._$indexList = this._$element.find(HzNavbarComponent.QUERY_INDEX_LIST);
+        this._$indexListItemTemplate = this._$indexList.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM);
     }
 
     /**
@@ -158,12 +261,28 @@ export class HzNavbarComponent extends ComponentController {
         this._$prevBtn.on(`click.${HzNavbarComponent.NAMESPACE}`, {instance: this}, this._onPrevClick);
         this._$homeBtn.on(`click.${HzNavbarComponent.NAMESPACE}`, {instance: this}, this._onHomeClick);
         this._$indexBtn.on(`click.${HzNavbarComponent.NAMESPACE}`, {instance: this}, this._onIndexClick);
+        this._$indexList.on(
+            `click.${HzNavbarComponent.NAMESPACE}`,
+            HzNavbarComponent.QUERY_INDEX_LIST_ITEM,
+            {instance: this},
+            this._onIndexListItemClick
+        );
         this._Navigator.on(Navigator.ON_DISABLE, {instance: this}, this._onDisabled);
         this._Navigator.on(Navigator.ON_ENABLE, {instance: this}, this._onEnabled);
         this._Navigator.on(Navigator.ON_CHANGE_PAGE_START, {instance: this}, this._onPageChangeStart);
         this._Navigator.on(Navigator.ON_CHANGE_PAGE_END, {instance: this}, this._onPageChangeEnd);
     }
 
+    protected _onIndexListItemClick(e) {
+        e.preventDefault();
+        let instance = e.data.instance,
+            $item = $(this),
+            page = $item.data(HzNavbarComponent.DATA_PAGE);
+        if (page) {
+            instance.closeIndexList();
+            instance._Navigator.goTo(page.index);
+        }
+    }
     /**
      * Invocado al hacerse click en el botón siguiente. Invoca a _Navigator#next
      * @param e
@@ -190,6 +309,11 @@ export class HzNavbarComponent extends ComponentController {
 
     protected _onIndexClick(e) {
         let instance = e.data.instance;
+        if (instance.indexListIsOpen()) {
+            instance.closeIndexList();
+        } else {
+            instance.openIndexList();
+        }
     }
 
 
@@ -313,6 +437,7 @@ export class HzNavbarComponent extends ComponentController {
         this._currentPageIndex = value;
         this._$currentPageIndex.text(value + 1);
     }
+
     protected _onDisabled(e) {
         let instance = e.data.instance;
         instance._updatePagerButtonState();

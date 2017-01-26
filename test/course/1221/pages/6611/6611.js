@@ -16,6 +16,7 @@ System.register(["@haztivity/core", "./6611.html!text", "../../../../resources/h
         ],
         execute: function () {
             page = core_1.PageFactory.createPage({
+                title: "Página 6611",
                 name: "6611",
                 resources: [
                     hzButton_1.HzButton
