@@ -10,12 +10,18 @@ System.config({
     },
 
     map: {
+        "@haztivity/core": "bitbucket:davinchi_finsi/core@0.1.1",
         "css": "github:systemjs/plugin-css@0.1.32",
-        "davinchi_finsi": "local:core@0.0.1",
         "font-awesome": "npm:font-awesome@4.7.0",
         "json": "github:systemjs/plugin-json@0.2.3",
         "text": "github:systemjs/plugin-text@0.0.9",
         "typescript": "npm:typescript@2.1.5",
+        "bitbucket:davinchi_finsi/core@0.1.1": {
+            "bottlejs": "npm:bottlejs@1.5.0",
+            "jquery": "npm:jquery@3.1.1",
+            "loglevel": "npm:loglevel@1.4.1",
+            "string": "npm:string@3.3.3"
+        },
         "github:jspm/nodelibs-assert@0.1.0": {
             "assert": "npm:assert@1.4.1"
         },
@@ -78,14 +84,6 @@ System.config({
         },
         "github:jspm/nodelibs-vm@0.1.0": {
             "vm-browserify": "npm:vm-browserify@0.0.4"
-        },
-        "local:core@0.0.1": {
-            "bottlejs": "npm:bottlejs@1.5.0",
-            "css": "github:systemjs/plugin-css@0.1.32",
-            "jquery": "npm:jquery@3.1.1",
-            "loglevel": "npm:loglevel@1.4.1",
-            "string": "npm:string@3.3.3",
-            "text": "github:systemjs/plugin-text@0.0.9"
         },
         "npm:asn1.js@4.9.1": {
             "bn.js": "npm:bn.js@4.11.6",

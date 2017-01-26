@@ -1,6 +1,5 @@
-System.register(["davinchi_finsi"], function (exports_1, context_1) {
+System.register(["@haztivity/core"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
             for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
             function __() {
@@ -25,20 +24,20 @@ System.register(["davinchi_finsi"], function (exports_1, context_1) {
                                                                                                   : d(target, key)) || r;
             return c > 3 && r && Object.defineProperty(target, key, r), r;
         };
-    var davinchi_finsi_1;
-    var HzButton;
+    var __moduleName = context_1 && context_1.id;
+    var davinchi_finsi_1, HzButton;
     return {
         setters: [
             function (davinchi_finsi_1_1) {
                 davinchi_finsi_1 = davinchi_finsi_1_1;
-            }],
+            }
+        ],
         execute: function () {
             HzButton = (function (_super) {
                 __extends(HzButton, _super);
                 function HzButton() {
-                    _super.apply(this, arguments);
+                    return _super !== null && _super.apply(this, arguments) || this;
                 }
-
                 HzButton.prototype.init = function (options, config) {
                     this._options = options;
                     this._$element.text(this._options.content);
@@ -55,19 +54,19 @@ System.register(["davinchi_finsi"], function (exports_1, context_1) {
                 HzButton.prototype.getInstance = function () {
                     return this;
                 };
-                HzButton = __decorate([
-                    davinchi_finsi_1.Resource({
-                        name: "hzButton",
-                        dependencies: [
-                            davinchi_finsi_1.$,
-                            davinchi_finsi_1.EventEmitterFactory
-                        ]
-                    })
-                ], HzButton);
                 return HzButton;
             }(davinchi_finsi_1.ResourceController));
+            HzButton = __decorate([
+                davinchi_finsi_1.Resource({
+                    name: "hzButton",
+                    dependencies: [
+                        davinchi_finsi_1.$,
+                        davinchi_finsi_1.EventEmitterFactory
+                    ]
+                })
+            ], HzButton);
             exports_1("HzButton", HzButton);
         }
-    }
+    };
 });
 //# sourceMappingURL=hzButton.js.map

@@ -57,7 +57,7 @@
             "lib": "src"
         },
         "dependencies": {
-            "davinchi_finsi": "local:core@^0.0.1"
+            "@haztivity/core": "bitbucket:davinchi_finsi/core@^0.1.1"
         },
         "devDependencies": {
             "css": "github:systemjs/plugin-css@^0.1.32",

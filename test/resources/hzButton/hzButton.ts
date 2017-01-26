@@ -2,7 +2,7 @@
  * @license
  * Copyright Davinchi. All Rights Reserved.
  */
-import {$, EventEmitterFactory, ResourceController, Resource, IResourceParams} from "davinchi_finsi";
+import {$, EventEmitterFactory, ResourceController, Resource, IResourceParams} from "@haztivity/core";
 @Resource(
     <IResourceParams>{
         name: "hzButton",

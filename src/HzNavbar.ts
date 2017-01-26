@@ -11,17 +11,7 @@ import {
     EventEmitterFactory,
     PageManager,
     PageController
-} from "davinchi_finsi";
-import {
-    $,
-    Navigator,
-    INavigatorPageData,
-    Component,
-    ComponentController,
-    EventEmitterFactory,
-    PageManager,
-    PageController
-} from "../jspm_packages/local/core@0.0.1/core";
+} from "@haztivity/core";
 @Component(
     {
         name: "HzNavbar",

@@ -1,8 +1,7 @@
-System.register(["davinchi_finsi/core", "./6613.html!text"], function (exports_1, context_1) {
+System.register(["@haztivity/core", "./6613.html!text"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var core_1, _6613_html_text_1;
-    var page;
+    var core_1, _6613_html_text_1, page;
     return {
         setters: [
             function (core_1_1) {
@@ -10,13 +9,15 @@ System.register(["davinchi_finsi/core", "./6613.html!text"], function (exports_1
             },
             function (_6613_html_text_1_1) {
                 _6613_html_text_1 = _6613_html_text_1_1;
-            }],
+            }
+        ],
         execute: function () {
             page = core_1.PageFactory.createPage({
                 name: "6613",
                 resources: [],
                 template: _6613_html_text_1.default
             });
+            exports_1("page6613", page);
             page.on(core_1.PageController.ON_RENDERING, null, function (eventObject, template, pageController) {
                 console.log(pageController.options.name + " rendering");
             });
@@ -35,8 +36,7 @@ System.register(["davinchi_finsi/core", "./6613.html!text"], function (exports_1
             page.on(core_1.PageController.ON_DESTROY, null, function (eventObject, $page, pageController) {
                 console.log(pageController.options.name + " destroy");
             });
-            exports_1("page6613", page);
         }
-    }
+    };
 });
 //# sourceMappingURL=6613.js.map

@@ -2,7 +2,7 @@
  * @license
  * Copyright Davinchi. All Rights Reserved.
  */
-import {PageFactory, Page, PageController} from "davinchi_finsi/core";
+import {PageFactory, Page, PageController} from "@haztivity/core";
 import template from "./6613.html!text";
 let page: Page = PageFactory.createPage(
     {

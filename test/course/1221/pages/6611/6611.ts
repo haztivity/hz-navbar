@@ -2,7 +2,7 @@
  * @license
  * Copyright Davinchi. All Rights Reserved.
  */
-import {PageFactory, Page, PageController} from "davinchi_finsi";
+import {PageFactory, Page, PageController} from "@haztivity/core";
 import template from "./6611.html!text";
 import {HzButton} from "../../../../resources/hzButton/hzButton";
 let page: Page = PageFactory.createPage(

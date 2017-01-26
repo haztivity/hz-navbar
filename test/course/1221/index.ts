@@ -3,7 +3,7 @@
  * Copyright Davinchi. All Rights Reserved.
  */
 import 'font-awesome';
-import {ScoFactory, Sco, ISco} from "davinchi_finsi";
+import {ScoFactory, Sco, ISco} from "@haztivity/core";
 import {HzNavbarComponent} from "../../../src/HzNavbar";
 import {page6611} from "./pages/6611/6611";
 import {page6612} from "./pages/6612/6612";
