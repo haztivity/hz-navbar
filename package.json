@@ -1,6 +1,6 @@
 {
-    "name": "@haztivity/navbar",
-    "version": "0.2.0",
+    "name": "@haztivity/hznavbar",
+    "version": "0.2.1",
     "description": "Componente de navegación para haztivity",
     "main": "index.js",
     "module": "index.js",
@@ -71,6 +71,6 @@
             "npm:jquery-ui@1.12.1": {
                 "format": "amd"
             }
-    }
+        }
     }
 }
