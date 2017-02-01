@@ -10,7 +10,7 @@ System.config({
     },
 
     map: {
-        "@haztivity/core": "bitbucket:davinchi_finsi/core@master",
+        "@haztivity/core": "bitbucket:davinchi_finsi/core@0.1.2",
         "css": "github:systemjs/plugin-css@0.1.32",
         "font-awesome": "npm:font-awesome@4.7.0",
         "jquery": "npm:jquery@3.1.1",
@@ -18,7 +18,7 @@ System.config({
         "json": "github:systemjs/plugin-json@0.2.3",
         "text": "github:systemjs/plugin-text@0.0.9",
         "typescript": "npm:typescript@2.1.5",
-        "bitbucket:davinchi_finsi/core@master": {
+        "bitbucket:davinchi_finsi/core@0.1.2": {
             "bottlejs": "npm:bottlejs@1.5.0",
             "jquery": "npm:jquery@3.1.1",
             "loglevel": "npm:loglevel@1.4.1",
