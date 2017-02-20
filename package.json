@@ -1,6 +1,6 @@
 {
   "name": "@haztivity/hznavbar",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Componente de navegación para haztivity",
   "main": "index.js",
   "module": "index.js",

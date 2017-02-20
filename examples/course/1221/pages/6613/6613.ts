@@ -3,11 +3,11 @@
  * Copyright Davinchi. All Rights Reserved.
  */
 import {PageFactory, Page, PageController} from "@haztivity/core";
-import template from "./6612.html!text";
+import * as template from "./6613.html!text";
 let page: Page = PageFactory.createPage(
     {
-        title: "Página 6612",
-        name: "6612",
+        title: "Página 6613",
+        name: "6613",
         resources: [],
         template: template
     }
@@ -42,4 +42,4 @@ page.on(
         console.log(`${pageController.options.name} destroy`);
     }
 );
-export {page as page6612};
+export {page as page6613};

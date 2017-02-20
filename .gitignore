@@ -2,15 +2,3 @@
 .idea/
 node_modules/
 jspm_packages/
-#src/**/*.js
-#src/**/*.js.map
-#src/**/*.html
-#src/**/*.d.ts
-#src/**/*.css
-#src/**/*.css.map
-test/**/*.css
-test/**/*.css.map
-test/**/*.js
-test/**/*.js.map
-test/**/*.html
-test/**/*.d.ts

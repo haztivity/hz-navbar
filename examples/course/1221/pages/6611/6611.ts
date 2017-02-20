@@ -3,12 +3,15 @@
  * Copyright Davinchi. All Rights Reserved.
  */
 import {PageFactory, Page, PageController} from "@haztivity/core";
-import template from "./6613.html!text";
+import * as template from "./6611.html!text";
+import {HzButton} from "../../../../resources/hzButton/hzButton";
 let page: Page = PageFactory.createPage(
     {
-        title: "Página 6613",
-        name: "6613",
-        resources: [],
+        title: "Página 6611",
+        name: "6611",
+        resources: [
+            HzButton
+        ],
         template: template
     }
 );
@@ -18,7 +21,7 @@ page.on(
     }
 );
 page.on(
-    PageController.ON_RENDERED, null, (eventObject, template, pageController) => {
+    PageController.ON_RENDERED, null, (eventObject, $page: JQuery, pageController: PageController) => {
         console.log(`${pageController.options.name} rendered`);
     }
 );
@@ -33,8 +36,8 @@ page.on(
     }
 );
 page.on(
-    PageController.ON_COMPLETE, null, (eventObject, $page, pageController) => {
-        console.log(`${pageController.options.name} complete`);
+    PageController.ON_COMPLETE_CHANGE, null, (eventObject, isCompleted, $page, pageController) => {
+        console.log(`${pageController.options.name} complete change`);
     }
 );
 page.on(
@@ -42,4 +45,4 @@ page.on(
         console.log(`${pageController.options.name} destroy`);
     }
 );
-export {page as page6613};
+export {page as page6611};
