@@ -56,7 +56,6 @@ export declare class HzNavbarComponent extends ComponentController {
     protected _progress: number;
     protected _currentPageIndex: number;
     protected _numPages: number;
-
     constructor(_$: JQueryStatic, _EventEmitterFactory: any, _Navigator: Navigator, _PageManager: PageManager, _DataOptions: any);
     init(options: any, config?: any): void;
     updatePaginator(): void;
@@ -83,15 +82,10 @@ export declare class HzNavbarComponent extends ComponentController {
      * @private
      */
     protected _updateText(to: any, text: any): void;
-
     closeIndexList(): void;
-
     indexListIsOpen(): any;
-
     openIndexList(): void;
-
     protected _generateIndex(): void;
-
     updateIndex(): void;
     /**
      * Obtiene los elementos del DOM a utilizar
@@ -103,7 +97,6 @@ export declare class HzNavbarComponent extends ComponentController {
      * @protected
      */
     protected _assignEvents(): void;
-
     protected _onIndexListItemClick(e: any): void;
     /**
      * Invocado al hacerse click en el botón siguiente. Invoca a _Navigator#next

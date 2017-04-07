@@ -1,54 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="UTF-8">
-        <title>Title</title>
-        <link type="text/css" rel="stylesheet" href="./main.css">
-        <script src="../../../jspm_packages/system.js"></script>
-        <script src="../../../config.js"></script>
-        <script>SystemJS.import("./index.js");</script>
-    </head>
-    <body>
-        <main data-hz-app>
-            <header>
-                <h1>Cabecera</h1>
-            </header>
-            <div data-hz-pages></div>
-            <div class="hz-navbar" data-hz-component="HzNavbar">
-                <div class="hz-navbar__progress">
-                    <div class="hz-navbar__progress-bar">
-                        <div class="hz-navbar__progress-mask"></div>
-                        <div class="hz-navbar__progress-value" data-hz-navbar-bar="data-hz-navbar-bar"></div>
-                    </div>
-                    <div class="hz-navbar__content hz-navbar__progress-percentage" data-hz-navbar-progress="data-hz-navbar-progress"></div>
-                </div>
-                <div class="hz-navbar__actions">
-                    <button class="hz-navbar__btn hz-navbar__action-home" data-hz-navbar-home="data-hz-navbar-home" data-hz-navbar-content="home" data-hz-navbar-content-to="title">
-                        <span class="hz-navbar__content" data-hz-navbar-content="home"></span>
-                    </button>
-                    <button class="hz-navbar__btn hz-navbar__action-index" data-hz-navbar-index="data-hz-navbar-index" data-hz-navbar-content="showIndex" data-hz-navbar-content-to="title">
-                        <span class="hz-navbar__content" data-hz-navbar-content="showIndex"></span>
-                    </button>
-                </div>
-                <div class="hz-navbar__pager">
-                    <button class="hz-navbar__btn hz-navbar__prev" data-hz-navbar-prev="data-hz-navbar-prev" data-hz-navbar-content="prev" data-hz-navbar-content-to="title">
-                        <span class="hz-navbar__content" data-hz-navbar-content="prev"></span>
-                    </button>
-                    <p class="hz-navbar__pages">
-                        <span class="hz-navbar__content hz-navbar__current" data-hz-navbar-current="data-hz-navbar-current" data-hz-navbar-content-to="title" data-hz-navbar-content="currentPage"></span>
-                        <span class="hz-navbar__content hz-navbar__total" data-hz-navbar-total="data-hz-navbar-total" data-hz-navbar-content-to="title" data-hz-navbar-content="totalPages"></span>
-                    </p>
-                    <button class="hz-navbar__btn hz-navbar__next" data-hz-navbar-next="data-hz-navbar-next" data-hz-navbar-content="next" data-hz-navbar-content-to="title">
-                        <span class="hz-navbar__content" data-hz-navbar-content="next"></span>
-                    </button>
-                </div>
-                <ul class="hz-navbar__index-list" data-hz-navbar-index-list="data-hz-navbar-index-list">
-                    <li class="hz-navbar__index-item" data-hz-navbar-index-list-item="data-hz-navbar-index-list-item">
-                        <a class="hz-navbar__index-item-content" data-hz-navbar-index-list-item-content="data-hz-navbar-index-list-item-content" href="javascript:void(0)"></a>
-                    </li>
-                </ul>
-            </div>
-        </main>
-    </body>
+<head>
+  <meta meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link type="text/css" rel="stylesheet" href="./main.css">
+  <!--script(src='../../../jspm_packages/system.js')-->
+  <!--script(src='../../../config.js')-->
+  <!--script.-->
+  <!--    SystemJS.import("./index.js");-->
+</head>
+<body>
+<main data-hz-app>
+  <header>
+    <h1>Cabecera</h1>
+  </header>
+  <div data-hz-pages></div>
+  <div class="hz-navbar" data-hz-component="HzNavbar">
+    <div class="hz-navbar__progress">
+      <div class="hz-navbar__progress-bar">
+        <div class="hz-navbar__progress-mask"></div>
+        <div class="hz-navbar__progress-value" data-hz-navbar-bar="data-hz-navbar-bar"></div>
+      </div>
+      <div class="hz-navbar__content hz-navbar__progress-percentage"
+           data-hz-navbar-progress="data-hz-navbar-progress"></div>
+    </div>
+    <div class="hz-navbar__actions">
+      <button class="hz-navbar__btn hz-navbar__action-home" data-hz-navbar-home="data-hz-navbar-home"
+              data-hz-navbar-content="home" data-hz-navbar-content-to="title"><span class="hz-navbar__content"
+                                                                                    data-hz-navbar-content="home"></span>
+      </button>
+      <button class="hz-navbar__btn hz-navbar__action-index" data-hz-navbar-index="data-hz-navbar-index"
+              data-hz-navbar-content="showIndex" data-hz-navbar-content-to="title"><span class="hz-navbar__content"
+                                                                                         data-hz-navbar-content="showIndex"></span>
+      </button>
+    </div>
+    <div class="hz-navbar__pager">
+      <button class="hz-navbar__btn hz-navbar__prev" data-hz-navbar-prev="data-hz-navbar-prev"
+              data-hz-navbar-content="prev" data-hz-navbar-content-to="title"><span class="hz-navbar__content"
+                                                                                    data-hz-navbar-content="prev"></span>
+      </button>
+      <p class="hz-navbar__pages"><span class="hz-navbar__content hz-navbar__current"
+                                        data-hz-navbar-current="data-hz-navbar-current"
+                                        data-hz-navbar-content-to="title"
+                                        data-hz-navbar-content="currentPage"></span><span
+              class="hz-navbar__content hz-navbar__total" data-hz-navbar-total="data-hz-navbar-total"
+              data-hz-navbar-content-to="title" data-hz-navbar-content="totalPages"></span></p>
+      <button class="hz-navbar__btn hz-navbar__next" data-hz-navbar-next="data-hz-navbar-next"
+              data-hz-navbar-content="next" data-hz-navbar-content-to="title"><span class="hz-navbar__content"
+                                                                                    data-hz-navbar-content="next"></span>
+      </button>
+    </div>
+    <ul class="hz-navbar__index-list" data-hz-navbar-index-list="data-hz-navbar-index-list">
+      <li class="hz-navbar__index-item" data-hz-navbar-index-list-item="data-hz-navbar-index-list-item"><a
+              class="hz-navbar__index-item-content"
+              data-hz-navbar-index-list-item-content="data-hz-navbar-index-list-item-content"
+              href="javascript:void(0)"></a></li>
+    </ul>
+  </div>
+</main>
+<script src="1221.js"></script>
+</body>
 </html>
