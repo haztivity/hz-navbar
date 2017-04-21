@@ -2,15 +2,17 @@
  * @license
  * Copyright Davinchi. All Rights Reserved.
  */
-import 'font-awesome';
+import template from "./sco.pug";
+import "./main.scss";
 import {ScoFactory, Sco, ISco} from "@haztivity/core";
-import {HzNavbarComponent} from "../../../src/HzNavbar";
-import {page6611} from "./pages/6611/6611";
-import {page6612} from "./pages/6612/6612";
-import {page6613} from "./pages/6613/6613";
+import {HzNavbarComponent} from "../components/HzNavbar/HzNavbar";
+import {page as page6611} from "./pages/6611/page";
+import {page as page6612} from "./pages/6612/page";
+import {page as page6613} from "./pages/6613/page";
 let sco: ISco = ScoFactory.createSco(
     {
         name: "1221",
+        template:template,
         pages: [
             page6611,
             page6612,

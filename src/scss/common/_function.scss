@@ -1,5 +1,4 @@
-@import "./config";
-
+$config_font-base:16!default;;
 @function em($pixels, $context: $config_font-base) {
     @return #{$pixels/$context}em
 }

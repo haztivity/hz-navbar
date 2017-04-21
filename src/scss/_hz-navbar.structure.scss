@@ -4,6 +4,7 @@
 //* Description: Estilos básicos de navbar
 //*********************************************
 /* _hz-navbar.structure */
+@import "./common/function";
 .hz-navbar {
     display: flex;
     padding: em(12);

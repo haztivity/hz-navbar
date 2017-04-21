@@ -3,6 +3,7 @@
 //* File: _hz-navbar.theme
 //* Description: Generador de temas
 //*********************************************
+@import "./common/function";
 @mixin hz-navbar__theme-maker(
     $BC-navbar,//fondo general
     $TC-bar,//texto del % de progreso
