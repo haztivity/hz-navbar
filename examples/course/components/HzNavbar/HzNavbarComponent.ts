@@ -13,7 +13,7 @@ import {
     PageController,
     DataOptions
 } from "@haztivity/core";
-import "jquery-ui-dist/jquery-ui";
+import "jquery-ui-dist/jquery-ui.js";
 @Component(
     {
         name: "HzNavbar",
