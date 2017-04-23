@@ -16,8 +16,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @license
+ * Copyright Davinchi. All Rights Reserved.
+ */
 var core_1 = require("@haztivity/core");
-require("jquery-ui-dist/jquery-ui");
+require("jquery-ui-dist/jquery-ui.js");
 var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
     __extends(HzNavbarComponent, _super);
     function HzNavbarComponent(_$, _EventEmitterFactory, _Navigator, _PageManager, _DataOptions) {
