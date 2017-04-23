@@ -1,7 +1,11 @@
-# Created by .ignore support plugin (hsz.mobi)
-.idea/
-node_modules/
-jspm_packages/
+build
+examples
+node_modules
+.fusebox
+.haztivycli.config.ts
+.haztivycli.config.js
+.idea
+*.log
 ### VisualStudioCode template
 .vscode/*
 !.vscode/settings.json
@@ -120,7 +124,6 @@ artifacts/
 *.tlh
 *.tmp
 *.tmp_proj
-*.log
 *.vspscc
 *.vssscc
 .builds
@@ -288,6 +291,7 @@ FakesAssemblies/
 
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
+node_modules/
 
 # Typescript v1 declaration files
 typings/
@@ -317,6 +321,7 @@ paket-files/
 .fake/
 
 # JetBrains Rider
+.idea/
 *.sln.iml
 
 # CodeRush

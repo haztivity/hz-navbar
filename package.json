@@ -32,5 +32,10 @@
     "pug": "^2.0.0-beta6",
     "require-dir": "^0.3.0",
     "typescript": "^2.1.1"
-  }
+  },
+  "directories": {
+    "typings": "src"
+  },
+  "types":"index.ts",
+  "typings":"index.ts"
 }
