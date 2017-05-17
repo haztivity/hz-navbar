@@ -1,1 +1,367 @@
-h1 Page 6611
+div
+    div.markdown-wrapper
+        :markdown-it(linkify)
+            # hz-navbar
+            hz-navbar is an haztivity component to manage the navigation in a sco.\
+            hz-navbar is synchronized with haztivity flow in each page.
+            
+            ## Features
+            - Auto disable during the transition of the page
+            - Auto disable next page navigation until complete the all the resources of the page
+            - Show the progress made
+            - Navigation buttons with the current and total pages
+            - Synchronized with haztivity Navigator
+            ## Dependencies
+            - JQuery
+            - JQuery UI
+            - @haztivity/core
+            
+            ## Simple use
+            1. Import @haztivity/hz-navbar
+            2. Add HzTooltipComponent to the sco
+            3. [Optional] Use the hz-navbar mixins to generate the HTML
+            4. Or add the ```data-hz-component``` to the container of the navbar and the different buttons. For more details go to [buttons section](#)
+                
+            ### Ts
+            #### Sco
+            ```typescript
+            import template from "./sco.pug";
+            import "./main.scss";
+            import {ScoFactory, Sco, ISco} from "@haztivity/core";
+            import {HzNavbarComponent} from "../components/HzNavbar/HzNavbar";
+            import {page as page6611} from "./pages/6611/page";
+            import {page as page6612} from "./pages/6612/page";
+            let sco: ISco = ScoFactory.createSco(
+                {
+                    name: "1221",
+                    template:template,
+                    pages: [
+                        page6611,
+                        page6612,
+                    ],
+                    components: [
+                        HzNavbarComponent
+                    ]
+                }
+            );
+            ```
+            #### Page
+            ```typescript
+            import {PageFactory, PageRegister, PageController} from "@haztivity/core";
+            import  template from "./page.pug";
+            export let page: PageRegister = PageFactory.createPage(
+                {
+                    title: "My page",//The title to show in the pages list
+                    name: "6612",
+                    resources: [],
+                    template: template
+                }
+            );
+            ```
+            ### Pug
+            ```jade
+            //if haztivity-cli is used
+            include node:@haztivity/hz-navbar/src/_hz-navbar
+            //otherwise
+            include pathToNodeModules/@haztivity/hz-navbar/src/_hz-navbar
+            +hz-navbar
+            ```
+            or
+            ### HTML
+            ```html
+            <div class="hz-navbar" data-hz-component="HzNavbar">
+                <div class="hz-navbar__progress">
+                    <!-- Progress bar -->
+                    <div class="hz-navbar__progress-bar">
+                        <div class="hz-navbar__progress-mask"></div>
+                        <!-- Set the attribute 'data-hz-navbar-bar' for render the bar -->
+                        <div class="hz-navbar__progress-value" data-hz-navbar-bar></div>
+                    </div>
+                    <!-- End progress bar for pages -->
+                    <!-- Percentage of progress, set the attribute 'data-hz-navbar-progress' -->
+                    <div class="hz-navbar__content hz-navbar__progress-percentage" data-hz-navbar-progress></div>
+                </div>
+                <!-- All the actions have to be wrapped by hz-navbar__actions. The navbar could have more than 1 hz-navbar__actions -->
+                <div class="hz-navbar__actions">
+                    <!-- Home button, set the attribute 'data-hz-navbar-home' -->
+                    <button class="hz-navbar__btn hz-navbar__action-home"
+                            data-hz-navbar-home
+                            data-hz-navbar-content="home"
+                            data-hz-navbar-content-to="title">
+                        <span class="hz-navbar__content" data-hz-navbar-content="home"></span>
+                    </button>
+                    <!-- Index button, shows the list of pages availables. Set the attribute 'data-hz-navbar-index' -->
+                    <button class="hz-navbar__btn hz-navbar__action-index"
+                            data-hz-navbar-index
+                            data-hz-navbar-content="showIndex"
+                            data-hz-navbar-content-to="title">
+                        <span class="hz-navbar__content" data-hz-navbar-content="showIndex"></span>
+                    </button>
+                </div>
+                <!-- Pagination -->
+                <div class="hz-navbar__pager">
+                    <!-- Prev button, set the attribute 'data-hz-navbar-prev' -->
+                    <button class="hz-navbar__btn hz-navbar__prev"
+                            data-hz-navbar-prev
+                            data-hz-navbar-content="prev"
+                            data-hz-navbar-content-to="title">
+                        <span class="hz-navbar__content" data-hz-navbar-content="prev"></span>
+                    </button>
+                    <!-- Pages current/total -->
+                    <p class="hz-navbar__pages">
+                        <!-- Current page, set the attribute 'data-hz-navbar-current' -->
+                        <span class="hz-navbar__content hz-navbar__current"
+                                data-hz-navbar-current
+                                data-hz-navbar-content-to="title"
+                                data-hz-navbar-content="currentPage"></span>
+                        <!-- Current pages, set the attribute 'data-hz-navbar-total' -->
+                        <span class="hz-navbar__content hz-navbar__total"
+                                data-hz-navbar-total
+                                data-hz-navbar-content-to="title"
+                                data-hz-navbar-content="totalPages"></span>
+                    </p>
+                    <!-- Current page, set the attribute 'data-hz-navbar-next' -->
+                    <button class="hz-navbar__btn hz-navbar__next"
+                            data-hz-navbar-next
+                            data-hz-navbar-content="next"
+                            data-hz-navbar-content-to="title">
+                    <span class="hz-navbar__content" data-hz-navbar-content="next"></span></button>
+                </div>
+                <!-- End pagination -->
+                <!-- Pages list -->
+                <ul class="hz-navbar__index-list" data-hz-navbar-index-list>
+                    <li class="hz-navbar__index-item" data-hz-navbar-index-list-item>
+                            <a class="hz-navbar__index-item-content" data-hz-navbar-index-list-item-content href="javascript:void(0)"></a>
+                    </li>
+                </ul>
+                <!-- End pages list -->
+                
+            </div>
+            ```
+            ## How it works
+            HzNavbar scans the markup (HTML) and identify the elements by their attributes, those attributes defines the role of each element.\
+            HzNavbar is configurable, it's possible to add or remove those elements or move them changing the order.
+            
+            ### Attributes
+            
+            #### i18
+            It's possible to have multiple languages for the navbar using the attribute ```data-hz-navbar-content``` and the option ```locale```.\
+            This attribute receives a variable name, the navbar in runtime will look for this variable in the ```locale``` option for the selected language and set the text in the element with the value.\
+            ```data-hz-navbar-content-to``` allows to set the text in an attribute instead of in the element itself, for example, it allows to set the text to the attribute ```title```
+            
+            ##### Example
+            
+            ###### Pug
+            ```jade
+            button.hz-navbar__btn.hz-navbar__next(
+                    data-hz-navbar-next
+                    data-hz-navbar-content="next"//- Search for the variable "next" in locale
+                    data-hz-navbar-content-to="title"//- Set the text to the attribute "title")
+                //- Search for the variable "next" in locale and set in the element itself
+                span.hz-navbar__content(data-hz-navbar-content="next")
+            ```
+            or
+            
+            ###### HTML
+            ```html
+            <button class="hz-navbar__btn hz-navbar__next"
+                        data-hz-navbar-next
+                        data-hz-navbar-content="next"//- Search for the variable "next" in locale
+                        data-hz-navbar-content-to="title"//- Set the text to the attribute "title">
+                <-- Search for the variable "next" in locale and set in the element itself -->
+                <span class="hz-navbar__content" data-hz-navbar-content="next"></span>
+            </button>
+            ```
+            
+            #### Container
+            It must have the ```data-hz-component``` attribute to start the component.
+            
+            #### Actions
+            HzNavbar provides a group of actions like go to the first page or show the list of available pages.
+            The actions have to be wrapped by a hz-navbar__actions.\
+            The navbar could have all the hz-navbar__actions desired.\
+            
+            ##### Available actions
+            - ```data-hz-navbar-home```: Go to the page marked has home
+            - ```data-hz-navbar-index```: Show a list of available pages
+            
+            ##### Example
+            
+            ###### Pug
+            ```jade
+            div.hz-navbar__actions
+                button.hz-navbar__btn.hz-navbar__action-home(
+                    data-hz-navbar-home
+                    data-hz-navbar-content="home"
+                    data-hz-navbar-content-to="title")
+                    span.hz-navbar__content(data-hz-navbar-content="home")
+            
+                button.hz-navbar__btn.hz-navbar__action-index(
+                    data-hz-navbar-index
+                    data-hz-navbar-content="showIndex"
+                    data-hz-navbar-content-to="title")
+                    span.hz-navbar__content(data-hz-navbar-content="showIndex")
+            ```
+            or
+            
+            ###### HTML
+            ```html
+            <div class="hz-navbar__actions">
+                <!-- Home button, set the attribute 'data-hz-navbar-home' -->
+                <button class="hz-navbar__btn hz-navbar__action-home"
+                        data-hz-navbar-home
+                        data-hz-navbar-content="home"
+                        data-hz-navbar-content-to="title">
+                    <span class="hz-navbar__content" data-hz-navbar-content="home"></span>
+                </button>
+                <!-- Index button, shows the list of pages availables. Set the attribute 'data-hz-navbar-index' -->
+                <button class="hz-navbar__btn hz-navbar__action-index"
+                        data-hz-navbar-index
+                        data-hz-navbar-content="showIndex"
+                        data-hz-navbar-content-to="title">
+                    <span class="hz-navbar__content" data-hz-navbar-content="showIndex"></span>
+                </button>
+            </div>
+            ```
+            #### Progress
+            The progress allow to know the progress made in terms of the number of pages viewed.\
+            The progress has two elements:
+            1. The progressbar: Shows the progress with a bar
+            2. The progress number: Shows the progress with numbers
+            It's possible to have the two, only one or any of them.
+            
+            ##### Example
+            
+            ###### Pug
+            ```jade
+            div.hz-navbar__progress
+                // Progress bar
+                div.hz-navbar__progress-bar
+                    div.hz-navbar__progress-mask
+                    div.hz-navbar__progress-value(data-hz-navbar-bar)
+                // End progress bar for pages
+                // Percentage of progress, set the attribute 'data-hz-navbar-progress'
+                div.hz-navbar__content.hz-navbar__progress-percentage(data-hz-navbar-progress)
+            ```
+            or
+            
+            ###### Html
+            ```html
+            <div class="hz-navbar__progress">
+                <!-- Progress bar -->
+                <div class="hz-navbar__progress-bar">
+                    <div class="hz-navbar__progress-mask"></div>
+                    <!-- Set the attribute 'data-hz-navbar-bar' for render the bar -->
+                    <div class="hz-navbar__progress-value" data-hz-navbar-bar></div>
+                </div>
+                <!-- End progress bar for pages -->
+                <!-- Percentage of progress, set the attribute 'data-hz-navbar-progress' -->
+                <div class="hz-navbar__content hz-navbar__progress-percentage" data-hz-navbar-progress></div>
+            </div>
+            ```
+            
+            #### Paginator
+            The paginator allows to change the page and know the current and total pages.
+            
+            ##### Example
+            ###### Pug
+            ```jade
+            // Pagination
+            .hz-navbar__pager
+                // Prev button, set the attribute 'data-hz-navbar-prev'
+                button.hz-navbar__btn.hz-navbar__prev(
+                        data-hz-navbar-prev
+                        data-hz-navbar-content='prev'
+                        data-hz-navbar-content-to='title')
+                    span.hz-navbar__content(data-hz-navbar-content='prev')
+                // Pages current/total
+                p.hz-navbar__pages
+                    // Current page, set the attribute 'data-hz-navbar-current'
+                    span.hz-navbar__content.hz-navbar__current
+                        data-hz-navbar-current
+                        data-hz-navbar-content-to='title'
+                        data-hz-navbar-content='currentPage')
+                    // Current pages, set the attribute 'data-hz-navbar-total'
+                    span.hz-navbar__content.hz-navbar__total(
+                        data-hz-navbar-total,
+                        data-hz-navbar-content-to='title'
+                        data-hz-navbar-content='totalPages')
+                // Current page, set the attribute 'data-hz-navbar-next'
+                button.hz-navbar__btn.hz-navbar__next(
+                        data-hz-navbar-next
+                        data-hz-navbar-content='next'
+                        data-hz-navbar-content-to='title')
+                    span.hz-navbar__content(data-hz-navbar-content='next')
+            // End pagination
+            ```
+            or
+            
+            ###### Html
+            ```html
+            <!-- Pagination -->
+            <div class="hz-navbar__pager">
+                <!-- Prev button, set the attribute 'data-hz-navbar-prev' -->
+                <button class="hz-navbar__btn hz-navbar__prev"
+                        data-hz-navbar-prev
+                        data-hz-navbar-content="prev"
+                        data-hz-navbar-content-to="title">
+                    <span class="hz-navbar__content" data-hz-navbar-content="prev"></span>
+                </button>
+                <!-- Pages current/total -->
+                <p class="hz-navbar__pages">
+                    <!-- Current page, set the attribute 'data-hz-navbar-current' -->
+                    <span class="hz-navbar__content hz-navbar__current"
+                            data-hz-navbar-current
+                            data-hz-navbar-content-to="title"
+                            data-hz-navbar-content="currentPage"></span>
+                    <!-- Current pages, set the attribute 'data-hz-navbar-total' -->
+                    <span class="hz-navbar__content hz-navbar__total"
+                            data-hz-navbar-total
+                            data-hz-navbar-content-to="title"
+                            data-hz-navbar-content="totalPages"></span>
+                </p>
+                <!-- Current page, set the attribute 'data-hz-navbar-next' -->
+                <button class="hz-navbar__btn hz-navbar__next"
+                        data-hz-navbar-next
+                        data-hz-navbar-content="next"
+                        data-hz-navbar-content-to="title">
+                <span class="hz-navbar__content" data-hz-navbar-content="next"></span></button>
+            </div>
+            <!-- End pagination -->
+            ```
+            #### Pages list
+            The list of pages provides a list of all the pages availables.\
+            HzNavbar provides a new attribute to add in the declaration of the pages: ```title```, the title to show in the list of pages
+            #### Page
+            ```typescript
+            import {PageFactory, PageRegister, PageController} from "@haztivity/core";
+            import  template from "./page.pug";
+            export let page: PageRegister = PageFactory.createPage(
+                {
+                    title: "My page",//The title to show in the pages list
+                    name: "6612",
+                    resources: [],
+                    template: template
+                }
+            );
+            ```
+            ##### Example
+            ###### Pug
+            ```jade
+            ul.hz-navbar__index-list(data-hz-navbar-index-list)
+                // The list item will be used as template to create all the pages
+                li.hz-navbar__index-item(data-hz-navbar-index-list-item)
+                    a.hz-navbar__index-item-content(data-hz-navbar-index-list-item-content, href="javascript:void(0)")
+            
+            ```
+            or
+            
+            ###### Html
+            ```html
+            <ul class="hz-navbar__index-list" data-hz-navbar-index-list>
+                <!-- The list item will be used as template to create all the pages -->
+                <li class="hz-navbar__index-item" data-hz-navbar-index-list-item>
+                    <a class="hz-navbar__index-item-content" data-hz-navbar-index-list-item-content href="javascript:void(0)"></a>
+                </li>
+            </ul>
+            ```

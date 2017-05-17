@@ -1,1 +1,35 @@
-h1 Page 6612
+div
+    div.markdown-wrapper
+        :markdown-it(linkify)
+            # hz-navbar manipulation
+            HzNavbar is synchronized with the navigator of haztivity, all the actions performed with the navigator will update the navbar.\
+            To interact with the navbar use the NavigatorService
+            ```typescript
+            import {PageFactory, PageRegister, PageController} from "@haztivity/core";
+            import  template from "./page.pug";
+            export let page: PageRegister = PageFactory.createPage(
+                {
+                    title: "MyPage",// Title to show in the pages list
+                    name: "6612",
+                    resources: [],
+                    template: template
+                }
+            );
+            page.on(
+                PageController.ON_SHOW, null, (eventObject, $page, $oldPage, oldPageRelativePosition, pageController) => {
+                    let navigatorService:NavigatorService = pageController.InjectorService.get(NavigatorService);
+                    navigatorService.disable();
+                    $page.find("#next").on("click",()=>{
+                        navigatorService.enable();
+                        navigatorService.next();
+                    });
+                    $page.find("#enable").on("click",()=>{
+                        navigatorService.enable();
+                    });
+                }
+            );
+            ```
+
+        button#next Next
+        button#enable Enable
+        button#disable Disable

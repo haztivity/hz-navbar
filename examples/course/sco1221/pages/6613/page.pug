@@ -1,1 +1,40 @@
-h1 page 6613
+div
+    div.markdown-wrapper
+        :markdown-it(linkify)
+            # hz-navbar theme maker
+            hz-navbar also provides a sass mixin to create themes easely.\
+            ## Available vars
+            - ```$BC-navbar```: Background color for the navbar
+            - ```$TC-bar```: Text color fort the % of progress
+            - ```$TC-home```: Text color for the home action
+            - ```$TC-index```:Text color for the index action
+            - ```$TC-pager-btn```:Text color for the pager buttons
+            - ```$TC-pager-pages```: Text color for the pages
+            - ```$BC-bar```: Background color for the progress bar background
+            - ```$BC-bar-value```: Background color for the progress bar foreground (the value)
+            - ```$BR-bar:none```:[OPTIONAL]Border for the progress bar
+            - ```$TM-animation```:[OPTIONAL] Animation duration
+            - ```$TC-home--hover```: [OPTIONAL]Text color for the home action when over, by default, the same as ```$TC-home```
+            - ```$TC-index--hover```:[OPTIONAL] Text color for the index action when over, by default, the same as ```$TC-index```
+            - ```$TC-home-icon```:[OPTIONAL] Text color for the icon of home action, by default, the same as ```$TC-home```
+            - ```$TC-index-icon```:[OPTIONAL] Text color for the icon of index action, by default, the same as ```$TC-index```
+            - ```$TC-home-icon--hover```:[OPTIONAL] Text color for the icon of home action when over, by default, the same as ```$TC-home-icon```
+            - ```$TC-index-icon--hover```:[OPTIONAL] Text color for the icon of index action when over, by default, the same as ```$TC-index-icon```
+            ```scss
+            // If haztivity-cli is used
+            @import "~@haztivity/hz-navbar/src/scss/_hz-navbar.structure";
+            @import "~@haztivity/hz-navbar/src/scss/_hz-navbar.theme";
+            // Otherwhise
+            @import "pathToNodeModules/@haztivity/hz-navbar/src/scss/_hz-navbar.structure";
+            @import "pathToNodeModules/@haztivity/hz-navbar/src/scss/_hz-navbar.theme";
+            @include hz-navbar__theme-maker(
+                    $BC-navbar: rgba(0, 0, 0, 0.5),
+                    $TC-bar: #fff,
+                    $TC-home: #fff,
+                    $TC-index: #fff,
+                    $TC-pager-btn: #fff,
+                    $TC-pager-pages: #fff,
+                    $BC-bar: #999,
+                    $BC-bar-value: #ddd
+            )
+            ```

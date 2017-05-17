@@ -2,13 +2,33 @@
  * @license
  * Copyright Davinchi. All Rights Reserved.
  */
-import {PageFactory, PageRegister, PageController} from "@haztivity/core";
+import * as Prism "prismjs";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-jade";
+import {PageFactory, PageRegister, PageController, NavigatorService} from "@haztivity/core";
 import  template from "./page.pug";
 export let page: PageRegister = PageFactory.createPage(
     {
-        title: "Página 6612",
+        title: "Manipulation",
         name: "6612",
         resources: [],
         template: template
+    }
+);
+page.on(
+    PageController.ON_SHOW, null, (eventObject, $page, $oldPage, oldPageRelativePosition, pageController) => {
+        Prism.highlightAll(false);
+        let navigatorService:NavigatorService = pageController.InjectorService.get(NavigatorService);
+        navigatorService.disable();
+        $page.find("#next").on("click",()=>{
+            navigatorService.enable();
+            navigatorService.next();
+        });
+        $page.find("#enable").on("click",()=>{
+            navigatorService.enable();
+        });
+        $page.find("#disable").on("click",()=>{
+            navigatorService.disable();
+        });
     }
 );
