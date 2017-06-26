@@ -7,8 +7,7 @@ import {
     EventEmitterFactory,
     PageManager,
     PageController,
-    DataOptions,
-    DevTools
+    DataOptions
 } from "@haztivity/core";
 import "jquery-ui-dist/jquery-ui";
 @Component(
@@ -19,8 +18,7 @@ import "jquery-ui-dist/jquery-ui";
             EventEmitterFactory,
             Navigator,
             PageManager,
-            DataOptions,
-            DevTools
+            DataOptions
         ]
     }
 )
@@ -74,7 +72,7 @@ export class HzNavbarComponent extends ComponentController {
     protected _currentPageIndex: number = 0;
     protected _numPages: number = 0;
     protected _indexListDialog;
-    constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager, protected _DataOptions, protected _DevTools) {
+    constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager, protected _DataOptions) {
         super(_$, _EventEmitterFactory);
     }
 
