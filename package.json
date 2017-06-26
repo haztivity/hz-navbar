@@ -19,9 +19,11 @@
   "license": "MIT",
   "homepage": "https://github.com/haztivity/hz-navbar/",
   "dependencies": {
-    "@haztivity/core": "^0.6.6",
-    "font-awesome": "^4.7.0",
+    "@haztivity/core": "^0.6.x",
     "jquery-ui-dist": "^1.12.1"
+  },
+  "optionalDependencies": {    
+    "font-awesome": "^4.7.0"
   },
   "devDependencies": {
     "@haztivity/cli": "^0.2.5",
