@@ -17,7 +17,7 @@
   },
   "author": "Davinchi",
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/haztivity/hz-navbar/",
   "dependencies": {
     "@haztivity/core": "^0.6.x",
     "font-awesome": "^4.7.0",
