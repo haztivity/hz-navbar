@@ -1,11 +1,11 @@
 {
   "name": "@haztivity/hz-navbar",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Navbar component for haztivity",
   "main": "dist/HzNavbar.js",
   "module": "dist/HzNavbar.js",
   "scripts": {
-    "build":"tsc -p src",
+    "build": "tsc -p src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/haztivity/hz-navbar"
   },
   "publishConfig": {
-      "access":"public"
+    "access": "public"
   },
   "author": "Davinchi",
   "license": "MIT",
@@ -42,6 +42,6 @@
   "directories": {
     "typings": "src"
   },
-  "types":"src/HzNavbar.ts",
-  "typings":"src/HzNavbar.ts"
+  "types": "src/HzNavbar.ts",
+  "typings": "src/HzNavbar.ts"
 }
