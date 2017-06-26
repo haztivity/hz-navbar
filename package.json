@@ -1,6 +1,6 @@
 {
   "name": "@haztivity/hz-navbar",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "Navbar component for haztivity",
   "main": "dist/HzNavbar.js",
   "module": "dist/HzNavbar.js",
@@ -22,7 +22,7 @@
     "@haztivity/core": "^0.6.x",
     "jquery-ui-dist": "^1.12.1"
   },
-  "optionalDependencies": {    
+  "optionalDependencies": {
     "font-awesome": "^4.7.0"
   },
   "devDependencies": {
