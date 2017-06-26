@@ -20,11 +20,12 @@ var core_1 = require("@haztivity/core");
 require("jquery-ui-dist/jquery-ui");
 var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
     __extends(HzNavbarComponent, _super);
-    function HzNavbarComponent(_$, _EventEmitterFactory, _Navigator, _PageManager, _DataOptions) {
+    function HzNavbarComponent(_$, _EventEmitterFactory, _Navigator, _PageManager, _DataOptions, _DevTools) {
         var _this = _super.call(this, _$, _EventEmitterFactory) || this;
         _this._Navigator = _Navigator;
         _this._PageManager = _PageManager;
         _this._DataOptions = _DataOptions;
+        _this._DevTools = _DevTools;
         _this._currentPageIndex = 0;
         _this._numPages = 0;
         return _this;
@@ -395,7 +396,8 @@ HzNavbarComponent = HzNavbarComponent_1 = __decorate([
             core_1.EventEmitterFactory,
             core_1.Navigator,
             core_1.PageManager,
-            core_1.DataOptions
+            core_1.DataOptions,
+            core_1.DevTools
         ]
     })
 ], HzNavbarComponent);

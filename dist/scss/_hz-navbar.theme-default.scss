@@ -1,0 +1,20 @@
+//********************************************
+//* Project: hznavbar
+//* File: _hz-navbar.theme-default
+//* Description: Tema por defecto
+//*********************************************
+/* _hz-navbar.theme-default */
+@import "./_hz-navbar.structure";
+@import "./_hz-navbar.theme";
+
+@include hz-navbar__theme-maker(
+        $BC-navbar: rgba(0, 0, 0, 0.5),
+        $TC-bar: #fff,
+        $TC-home: #fff,
+        $TC-index: #fff,
+        $TC-pager-btn: #fff,
+        $TC-pager-pages: #fff,
+        $BC-bar: #999,
+        $BC-bar-value: #ddd
+)
+/* End _hz-navbar.theme-default */

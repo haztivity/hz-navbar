@@ -1,46 +1,47 @@
 {
   "name": "@haztivity/hz-navbar",
   "version": "0.6.2",
-  "description": "Componente de navegación para haztivity",
-  "main": "index.js",
-  "module": "index.js",
+  "description": "Navbar component for haztivity",
+  "main": "dist/HzNavbar.js",
+  "module": "dist/HzNavbar.js",
   "scripts": {
+    "build":"tsc -p src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/davinchi_finsi/hznavbar"
+    "url": "git+https://github.com/haztivity/hz-navbar"
   },
   "publishConfig": {
       "access":"public"
   },
   "author": "Davinchi",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "",
   "dependencies": {
-    "@haztivity/core": "^0.6.1",
+    "@haztivity/core": "^0.6.x",
     "font-awesome": "^4.7.0",
     "jquery-ui-dist": "^1.12.1"
   },
   "devDependencies": {
-    "@haztivity/cli": "^0.2.3",
-    "@types/core-js": "^0.9.35",
-    "@types/jquery": "^2.0.34",
+    "@haztivity/cli": "^0.2.5",
+    "@types/core-js": "^0.9.41",
+    "@types/jquery": "^3.2.5",
     "@types/loglevel": "^1.4.29",
     "@types/string": "0.0.28",
-    "autoprefixer": "^6.5.1",
-    "commander": "^2.9.0",
-    "merge2": "^1.0.2",
-    "postcss": "^5.2.4",
-    "pug": "^2.0.0-beta6",
-    "require-dir": "^0.3.0",
-    "typescript": "^2.1.1",
+    "autoprefixer": "^7.1.1",
+    "commander": "^2.10.0",
+    "merge2": "^1.0.3",
+    "postcss": "^6.0.3",
+    "pug": "^2.0.0-rc.2",
+    "require-dir": "^0.3.2",
+    "typescript": "^2.3.4",
     "jstransformer-markdown-it": "^2.0.0",
     "prismjs": "^1.6.0"
   },
   "directories": {
     "typings": "src"
   },
-  "types":"index.ts",
-  "typings":"index.ts"
+  "types":"src/HzNavbar.ts",
+  "typings":"src/HzNavbar.ts"
 }

@@ -1,7 +1,3 @@
-/**
- * @license
- * Copyright Davinchi. All Rights Reserved.
- */
 import {
     $,
     Navigator,
@@ -13,7 +9,7 @@ import {
     PageController,
     DataOptions
 } from "@haztivity/core";
-import "jquery-ui-dist/jquery-ui.js";
+import "jquery-ui-dist/jquery-ui";
 @Component(
     {
         name: "HzNavbar",
@@ -76,7 +72,7 @@ export class HzNavbarComponent extends ComponentController {
     protected _currentPageIndex: number = 0;
     protected _numPages: number = 0;
     protected _indexListDialog;
-    constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager, protected _DataOptions) {
+    constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager, protected _DataOptions, protected _DevTools) {
         super(_$, _EventEmitterFactory);
     }
 
@@ -446,4 +442,3 @@ export class HzNavbarComponent extends ComponentController {
         instance._updatePagerButtonState();
     }
 }
-

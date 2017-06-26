@@ -1,0 +1,23 @@
+mixin hz-navbar()
+    div.hz-navbar(data-hz-component="HzNavbar")
+        div.hz-navbar__progress
+            div.hz-navbar__progress-bar
+                div.hz-navbar__progress-mask
+                div(data-hz-navbar-bar).hz-navbar__progress-value
+            div(data-hz-navbar-progress).hz-navbar__content.hz-navbar__progress-percentage
+        div.hz-navbar__actions
+            button(data-hz-navbar-home, data-hz-navbar-content="home", data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__action-home
+                span(data-hz-navbar-content="home").hz-navbar__content
+            button(data-hz-navbar-index, data-hz-navbar-content="showIndex", data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__action-index
+                span(data-hz-navbar-content="showIndex").hz-navbar__content
+        div.hz-navbar__pager
+            button(data-hz-navbar-prev,data-hz-navbar-content="prev",data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__prev
+                span(data-hz-navbar-content="prev").hz-navbar__content
+            p.hz-navbar__pages
+                span(data-hz-navbar-current, data-hz-navbar-content-to="title", data-hz-navbar-content="currentPage").hz-navbar__content.hz-navbar__current
+                span(data-hz-navbar-total, data-hz-navbar-content-to="title", data-hz-navbar-content="totalPages").hz-navbar__content.hz-navbar__total
+            button(data-hz-navbar-next,data-hz-navbar-content="next",data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__next
+                span(data-hz-navbar-content="next").hz-navbar__content
+        ul.hz-navbar__index-list(data-hz-navbar-index-list)
+            li.hz-navbar__index-item(data-hz-navbar-index-list-item)
+                a.hz-navbar__index-item-content(data-hz-navbar-index-list-item-content, href="javascript:void(0)")
