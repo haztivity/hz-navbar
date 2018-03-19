@@ -9,6 +9,7 @@
     $TC-bar,//texto del % de progreso
     $TC-home,//texto de home
     $TC-index,//texto de índice
+    $TC-exit,//texto de salir
     $TC-pager-btn,//texto de los botones del paginador
     $TC-pager-pages,//texto de las páginas
     $BC-bar,//fondo de la barra de progreso
@@ -20,7 +21,11 @@
     $TC-home-icon:$TC-home,//icono de home
     $TC-index-icon:$TC-index,//icono de índice
     $TC-home-icon--hover:$TC-home-icon,//icono de home en hover
-    $TC-index-icon--hover:$TC-index-icon//icono de índice en hover
+    $TC-index-icon--hover:$TC-index-icon,//icono de índice en hover
+    $TC-exit-icon:$TC-exit,
+    $TC-exit--hover:$TC-exit,
+    $TC-exit-icon--hover:$TC-exit,
+    $BC-dialog__header:$BC-bar//fondo cabecera dialogo
 ) {
     .hz-navbar {
         background-color: $BC-navbar;
@@ -99,6 +104,22 @@
                 color: $TC-index-icon;
             }
         }
+        .hz-navbar__action-exit{
+            color:$TC-exit;
+            &:not([disabled]){
+                &:hover,
+                &:focus {
+                    color: $TC-exit--hover;
+                    &:after {
+                        color: $TC-exit-icon--hover;
+                    }
+                }
+            }
+            &:after{
+                content:"\f08b";
+                color:$TC-exit-icon;
+            }
+        }
         //pager
         .hz-navbar__pager {
             .hz-navbar__btn {
@@ -127,5 +148,44 @@
         .hz-navbar__pages {
             color: $TC-pager-pages;
         }
+    }
+    .ui-dialog.hz-navbar__dialog{
+        padding:0;
+        box-shadow:0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
+        .ui-dialog-titlebar{
+            background-color:$BC-dialog__header;
+        }
+        .ui-dialog-titlebar-close{
+            font-size:0;
+            background: none;
+            border:none;
+            cursor: pointer;
+            &:after{
+                content:"\f00d";
+                font-size:rem(16);
+                color:#fff;
+                font-family:"FontAwesome";
+            }
+        }
+        .hz-navbar__index-item{
+            .hz-navbar__index-item-content {
+                color: #666;
+                cursor: default;
+            }
+            &.hz-navbar__page--completed{
+                .hz-navbar__index-item-content {
+                    color: $BC-dialog__header;
+                    cursor: pointer
+                }
+            }
+            &.hz-navbar__page--visited,
+            &.hz-navbar__page--completed + .hz-navbar__index-item{
+                .hz-navbar__index-item-content {
+                    color: #333;
+                    cursor: pointer;
+                }
+            }
+        }
+
     }
 }

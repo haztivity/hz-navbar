@@ -7,7 +7,8 @@ import {
     EventEmitterFactory,
     PageManager,
     PageController,
-    DataOptions
+    DataOptions,
+    ScoFactory
 } from "@haztivity/core";
 import "jquery-ui-dist/jquery-ui";
 @Component(
@@ -25,13 +26,14 @@ import "jquery-ui-dist/jquery-ui";
 export class HzNavbarComponent extends ComponentController {
     public static readonly NAMESPACE = "hzNavbar";
     protected static readonly PREFIX = "hz-navbar";
-    public static readonly PREFIX_LIST_DIALOG_OPTIONS = `${HzNavbarComponent.NAMESPACE}Dialog`;
     public static readonly QUERY_ACTION_NEXT = `[data-${HzNavbarComponent.PREFIX}-next]`;
     public static readonly QUERY_ACTION_PREV = `[data-${HzNavbarComponent.PREFIX}-prev]`;
     public static readonly QUERY_BAR = `[data-${HzNavbarComponent.PREFIX}-bar]`;
     public static readonly QUERY_PROGRESS = `[data-${HzNavbarComponent.PREFIX}-progress]`;
     public static readonly QUERY_ACTION_HOME = `[data-${HzNavbarComponent.PREFIX}-home]`;
     public static readonly QUERY_ACTION_INDEX = `[data-${HzNavbarComponent.PREFIX}-index]`;
+    public static readonly QUERY_ACTION_EXIT = `[data-${HzNavbarComponent.PREFIX}-exit]`;
+    public static readonly QUERY_ACTION_EXIT_DIALOG = `[data-${HzNavbarComponent.PREFIX}-exit-dialog]`;
     public static readonly QUERY_PAGE_CURRENT = `[data-${HzNavbarComponent.PREFIX}-current]`;
     public static readonly QUERY_PAGE_TOTAL = `[data-${HzNavbarComponent.PREFIX}-total]`;
     public static readonly QUERY_INDEX_LIST = `[data-${HzNavbarComponent.PREFIX}-index-list]`;
@@ -39,10 +41,13 @@ export class HzNavbarComponent extends ComponentController {
     public static readonly QUERY_INDEX_LIST_ITEM_CONTENT = `[data-${HzNavbarComponent.PREFIX}-index-list-item-content]`;
     public static readonly CLASS_PAGE_VISITED = "hz-navbar__page--visited";
     public static readonly CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
-    public static readonly CLASS_LIST_INDEX_DIALOG = "hz-navbar__index-list-dialog";
+    public static readonly CLASS_LIST_INDEX_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
+    public static readonly CLASS_LIST_EXIT_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     public static readonly DATA_PAGE = "hzNavbarPage";
     protected static readonly OPT_DIALOG_DEFAULTS = {
-        autoOpen: false
+        autoOpen: false,
+        show:"fade",
+        hide:"fade"
     };
     protected static readonly _DEFAULTS = {
         locale: {
@@ -53,7 +58,12 @@ export class HzNavbarComponent extends ComponentController {
                 totalPages: "Páginas totales",
                 home: "Ir al inicio",
                 showIndex: "Mostrar índice",
-                index: "Índice"
+                index: "Índice",
+                exit: "Salir",
+                exitTitle:"Salir",
+                exitMessage:"Va a salir del curso. ¿Desea guardar la puntuación y salir?",
+                exitOk:"Salir",
+                exitKo:"Cancelar"
             }
         },
         defaultLang: "es"
@@ -64,6 +74,8 @@ export class HzNavbarComponent extends ComponentController {
     protected _$progress: JQuery;
     protected _$homeBtn: JQuery;
     protected _$indexBtn: JQuery;
+    protected _$exitBtn: JQuery;
+    protected _$exitDialog:JQuery;
     protected _$currentPageIndex: JQuery;
     protected _$numPages: JQuery;
     protected _$indexList: JQuery;
@@ -80,11 +92,38 @@ export class HzNavbarComponent extends ComponentController {
         this._options = $.extend(true, {}, HzNavbarComponent._DEFAULTS, options);
         this._getElements();
         this.updateLocale();
+        this._initExitDialog();
         this.progress(0);
         this._assignEvents();
         this.updatePaginator();
     }
-
+    protected _initExitDialog(){
+        let locale = this._options.locale[this._options.lang] || this._options.locale[this._options.defaultLang];
+        let options = this._DataOptions.getDataOptions(this._$exitDialog, "dialog");
+        options = $.extend(true,options,{
+            autoOpen:false,
+            show:"fade",
+            hide:"fade",
+            resizable:false,
+            modal:true,
+            buttons: [
+                {
+                    text: locale.exitOk,
+                    click:this._onConfirmExit.bind(this)
+                },
+                {
+                    text: locale.exitKo,
+                    click:this._onCancelExit.bind(this)
+                }
+            ]
+        });
+        if(options.dialogClass){
+            options.dialogClass+=" "+HzNavbarComponent.CLASS_LIST_EXIT_DIALOG;
+        }else{
+            options.dialogClass = HzNavbarComponent.CLASS_LIST_EXIT_DIALOG;
+        }
+        this._$exitDialog.dialog(options)
+    }
     public updatePaginator() {
         let numPages = this._PageManager.count();
         this._setNumPages(numPages);
@@ -158,7 +197,6 @@ export class HzNavbarComponent extends ComponentController {
             }
         }
     }
-
     public closeIndexList() {
         if (this._indexListDialog) {
             this._indexListDialog.close();
@@ -185,11 +223,12 @@ export class HzNavbarComponent extends ComponentController {
         if (this._$indexList && this._$indexList.length > 0 && this._$indexListItemTemplate && this._$indexListItemTemplate.length > 0) {
             this._$indexListItemTemplate.detach();
             let options = $.extend(
+                true,
                 {},
                 HzNavbarComponent.OPT_DIALOG_DEFAULTS,
                 this._DataOptions.getDataOptions(
                     this._$indexList,
-                    HzNavbarComponent.PREFIX_LIST_DIALOG_OPTIONS
+                    "dialog"
                 )
             );
             options.dialogClass = HzNavbarComponent.CLASS_LIST_INDEX_DIALOG;
@@ -240,6 +279,8 @@ export class HzNavbarComponent extends ComponentController {
         this._$progress = this._$element.find(HzNavbarComponent.QUERY_PROGRESS);
         this._$homeBtn = this._$element.find(HzNavbarComponent.QUERY_ACTION_HOME);
         this._$indexBtn = this._$element.find(HzNavbarComponent.QUERY_ACTION_INDEX);
+        this._$exitBtn = this._$element.find(HzNavbarComponent.QUERY_ACTION_EXIT);
+        this._$exitDialog = this._$element.find(HzNavbarComponent.QUERY_ACTION_EXIT_DIALOG);
         this._$currentPageIndex = this._$element.find(HzNavbarComponent.QUERY_PAGE_CURRENT);
         this._$numPages = this._$element.find(HzNavbarComponent.QUERY_PAGE_TOTAL);
         this._$indexList = this._$element.find(HzNavbarComponent.QUERY_INDEX_LIST);
@@ -255,6 +296,7 @@ export class HzNavbarComponent extends ComponentController {
         this._$prevBtn.on(`click.${HzNavbarComponent.NAMESPACE}`, {instance: this}, this._onPrevClick);
         this._$homeBtn.on(`click.${HzNavbarComponent.NAMESPACE}`, {instance: this}, this._onHomeClick);
         this._$indexBtn.on(`click.${HzNavbarComponent.NAMESPACE}`, {instance: this}, this._onIndexClick);
+        this._$exitBtn.on(`click.${HzNavbarComponent.NAMESPACE}`, {instance: this}, this._onExitClick);
         this._$indexList.on(
             `click.${HzNavbarComponent.NAMESPACE}`,
             HzNavbarComponent.QUERY_INDEX_LIST_ITEM,
@@ -299,8 +341,19 @@ export class HzNavbarComponent extends ComponentController {
 
     protected _onHomeClick(e) {
         let instance = e.data.instance;
+        instance._Navigator.goTo(0);
     }
-
+    protected _onExitClick(e) {
+        let instance = e.data.instance;
+        instance._$exitDialog.dialog("open");
+    }
+    protected _onCancelExit(){
+        this._$exitDialog.dialog("close");
+    }
+    protected _onConfirmExit(){
+        this._$exitDialog.dialog("close").dialog("destroy");
+        ScoFactory.getCurrentSco().exit();
+    }
     protected _onIndexClick(e) {
         let instance = e.data.instance;
         if (instance.indexListIsOpen()) {

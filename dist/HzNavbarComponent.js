@@ -18,7 +18,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@haztivity/core");
 require("jquery-ui-dist/jquery-ui");
-var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
+var HzNavbarComponent = /** @class */ (function (_super) {
     __extends(HzNavbarComponent, _super);
     function HzNavbarComponent(_$, _EventEmitterFactory, _Navigator, _PageManager, _DataOptions) {
         var _this = _super.call(this, _$, _EventEmitterFactory) || this;
@@ -29,13 +29,43 @@ var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
         _this._numPages = 0;
         return _this;
     }
+    HzNavbarComponent_1 = HzNavbarComponent;
     HzNavbarComponent.prototype.init = function (options, config) {
         this._options = core_1.$.extend(true, {}, HzNavbarComponent_1._DEFAULTS, options);
         this._getElements();
         this.updateLocale();
+        this._initExitDialog();
         this.progress(0);
         this._assignEvents();
         this.updatePaginator();
+    };
+    HzNavbarComponent.prototype._initExitDialog = function () {
+        var locale = this._options.locale[this._options.lang] || this._options.locale[this._options.defaultLang];
+        var options = this._DataOptions.getDataOptions(this._$exitDialog, "dialog");
+        options = core_1.$.extend(true, options, {
+            autoOpen: false,
+            show: "fade",
+            hide: "fade",
+            resizable: false,
+            modal: true,
+            buttons: [
+                {
+                    text: locale.exitOk,
+                    click: this._onConfirmExit.bind(this)
+                },
+                {
+                    text: locale.exitKo,
+                    click: this._onCancelExit.bind(this)
+                }
+            ]
+        });
+        if (options.dialogClass) {
+            options.dialogClass += " " + HzNavbarComponent_1.CLASS_LIST_EXIT_DIALOG;
+        }
+        else {
+            options.dialogClass = HzNavbarComponent_1.CLASS_LIST_EXIT_DIALOG;
+        }
+        this._$exitDialog.dialog(options);
     };
     HzNavbarComponent.prototype.updatePaginator = function () {
         var numPages = this._PageManager.count();
@@ -128,7 +158,7 @@ var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
     HzNavbarComponent.prototype._generateIndex = function () {
         if (this._$indexList && this._$indexList.length > 0 && this._$indexListItemTemplate && this._$indexListItemTemplate.length > 0) {
             this._$indexListItemTemplate.detach();
-            var options = core_1.$.extend({}, HzNavbarComponent_1.OPT_DIALOG_DEFAULTS, this._DataOptions.getDataOptions(this._$indexList, HzNavbarComponent_1.PREFIX_LIST_DIALOG_OPTIONS));
+            var options = core_1.$.extend(true, {}, HzNavbarComponent_1.OPT_DIALOG_DEFAULTS, this._DataOptions.getDataOptions(this._$indexList, "dialog"));
             options.dialogClass = HzNavbarComponent_1.CLASS_LIST_INDEX_DIALOG;
             this._$indexList.dialog(options);
             this._indexListDialog = this._$indexList.data("ui-dialog");
@@ -172,6 +202,8 @@ var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
         this._$progress = this._$element.find(HzNavbarComponent_1.QUERY_PROGRESS);
         this._$homeBtn = this._$element.find(HzNavbarComponent_1.QUERY_ACTION_HOME);
         this._$indexBtn = this._$element.find(HzNavbarComponent_1.QUERY_ACTION_INDEX);
+        this._$exitBtn = this._$element.find(HzNavbarComponent_1.QUERY_ACTION_EXIT);
+        this._$exitDialog = this._$element.find(HzNavbarComponent_1.QUERY_ACTION_EXIT_DIALOG);
         this._$currentPageIndex = this._$element.find(HzNavbarComponent_1.QUERY_PAGE_CURRENT);
         this._$numPages = this._$element.find(HzNavbarComponent_1.QUERY_PAGE_TOTAL);
         this._$indexList = this._$element.find(HzNavbarComponent_1.QUERY_INDEX_LIST);
@@ -186,6 +218,7 @@ var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
         this._$prevBtn.on("click." + HzNavbarComponent_1.NAMESPACE, { instance: this }, this._onPrevClick);
         this._$homeBtn.on("click." + HzNavbarComponent_1.NAMESPACE, { instance: this }, this._onHomeClick);
         this._$indexBtn.on("click." + HzNavbarComponent_1.NAMESPACE, { instance: this }, this._onIndexClick);
+        this._$exitBtn.on("click." + HzNavbarComponent_1.NAMESPACE, { instance: this }, this._onExitClick);
         this._$indexList.on("click." + HzNavbarComponent_1.NAMESPACE, HzNavbarComponent_1.QUERY_INDEX_LIST_ITEM, { instance: this }, this._onIndexListItemClick);
         this._Navigator.on(core_1.Navigator.ON_DISABLE, { instance: this }, this._onDisabled);
         this._Navigator.on(core_1.Navigator.ON_ENABLE, { instance: this }, this._onEnabled);
@@ -220,6 +253,18 @@ var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
     };
     HzNavbarComponent.prototype._onHomeClick = function (e) {
         var instance = e.data.instance;
+        instance._Navigator.goTo(0);
+    };
+    HzNavbarComponent.prototype._onExitClick = function (e) {
+        var instance = e.data.instance;
+        instance._$exitDialog.dialog("open");
+    };
+    HzNavbarComponent.prototype._onCancelExit = function () {
+        this._$exitDialog.dialog("close");
+    };
+    HzNavbarComponent.prototype._onConfirmExit = function () {
+        this._$exitDialog.dialog("close").dialog("destroy");
+        core_1.ScoFactory.getCurrentSco().exit();
     };
     HzNavbarComponent.prototype._onIndexClick = function (e) {
         var instance = e.data.instance;
@@ -350,55 +395,64 @@ var HzNavbarComponent = HzNavbarComponent_1 = (function (_super) {
         var instance = e.data.instance;
         instance._updatePagerButtonState();
     };
+    HzNavbarComponent.NAMESPACE = "hzNavbar";
+    HzNavbarComponent.PREFIX = "hz-navbar";
+    HzNavbarComponent.QUERY_ACTION_NEXT = "[data-" + HzNavbarComponent_1.PREFIX + "-next]";
+    HzNavbarComponent.QUERY_ACTION_PREV = "[data-" + HzNavbarComponent_1.PREFIX + "-prev]";
+    HzNavbarComponent.QUERY_BAR = "[data-" + HzNavbarComponent_1.PREFIX + "-bar]";
+    HzNavbarComponent.QUERY_PROGRESS = "[data-" + HzNavbarComponent_1.PREFIX + "-progress]";
+    HzNavbarComponent.QUERY_ACTION_HOME = "[data-" + HzNavbarComponent_1.PREFIX + "-home]";
+    HzNavbarComponent.QUERY_ACTION_INDEX = "[data-" + HzNavbarComponent_1.PREFIX + "-index]";
+    HzNavbarComponent.QUERY_ACTION_EXIT = "[data-" + HzNavbarComponent_1.PREFIX + "-exit]";
+    HzNavbarComponent.QUERY_ACTION_EXIT_DIALOG = "[data-" + HzNavbarComponent_1.PREFIX + "-exit-dialog]";
+    HzNavbarComponent.QUERY_PAGE_CURRENT = "[data-" + HzNavbarComponent_1.PREFIX + "-current]";
+    HzNavbarComponent.QUERY_PAGE_TOTAL = "[data-" + HzNavbarComponent_1.PREFIX + "-total]";
+    HzNavbarComponent.QUERY_INDEX_LIST = "[data-" + HzNavbarComponent_1.PREFIX + "-index-list]";
+    HzNavbarComponent.QUERY_INDEX_LIST_ITEM = "[data-" + HzNavbarComponent_1.PREFIX + "-index-list-item]";
+    HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT = "[data-" + HzNavbarComponent_1.PREFIX + "-index-list-item-content]";
+    HzNavbarComponent.CLASS_PAGE_VISITED = "hz-navbar__page--visited";
+    HzNavbarComponent.CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
+    HzNavbarComponent.CLASS_LIST_INDEX_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
+    HzNavbarComponent.CLASS_LIST_EXIT_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
+    HzNavbarComponent.DATA_PAGE = "hzNavbarPage";
+    HzNavbarComponent.OPT_DIALOG_DEFAULTS = {
+        autoOpen: false,
+        show: "fade",
+        hide: "fade"
+    };
+    HzNavbarComponent._DEFAULTS = {
+        locale: {
+            "es": {
+                next: "Siguiente",
+                prev: "Anterior",
+                currentPage: "Página actual",
+                totalPages: "Páginas totales",
+                home: "Ir al inicio",
+                showIndex: "Mostrar índice",
+                index: "Índice",
+                exit: "Salir",
+                exitTitle: "Salir",
+                exitMessage: "Va a salir del curso. ¿Desea guardar la puntuación y salir?",
+                exitOk: "Salir",
+                exitKo: "Cancelar"
+            }
+        },
+        defaultLang: "es"
+    };
+    HzNavbarComponent = HzNavbarComponent_1 = __decorate([
+        core_1.Component({
+            name: "HzNavbar",
+            dependencies: [
+                core_1.$,
+                core_1.EventEmitterFactory,
+                core_1.Navigator,
+                core_1.PageManager,
+                core_1.DataOptions
+            ]
+        })
+    ], HzNavbarComponent);
     return HzNavbarComponent;
+    var HzNavbarComponent_1;
 }(core_1.ComponentController));
-HzNavbarComponent.NAMESPACE = "hzNavbar";
-HzNavbarComponent.PREFIX = "hz-navbar";
-HzNavbarComponent.PREFIX_LIST_DIALOG_OPTIONS = HzNavbarComponent_1.NAMESPACE + "Dialog";
-HzNavbarComponent.QUERY_ACTION_NEXT = "[data-" + HzNavbarComponent_1.PREFIX + "-next]";
-HzNavbarComponent.QUERY_ACTION_PREV = "[data-" + HzNavbarComponent_1.PREFIX + "-prev]";
-HzNavbarComponent.QUERY_BAR = "[data-" + HzNavbarComponent_1.PREFIX + "-bar]";
-HzNavbarComponent.QUERY_PROGRESS = "[data-" + HzNavbarComponent_1.PREFIX + "-progress]";
-HzNavbarComponent.QUERY_ACTION_HOME = "[data-" + HzNavbarComponent_1.PREFIX + "-home]";
-HzNavbarComponent.QUERY_ACTION_INDEX = "[data-" + HzNavbarComponent_1.PREFIX + "-index]";
-HzNavbarComponent.QUERY_PAGE_CURRENT = "[data-" + HzNavbarComponent_1.PREFIX + "-current]";
-HzNavbarComponent.QUERY_PAGE_TOTAL = "[data-" + HzNavbarComponent_1.PREFIX + "-total]";
-HzNavbarComponent.QUERY_INDEX_LIST = "[data-" + HzNavbarComponent_1.PREFIX + "-index-list]";
-HzNavbarComponent.QUERY_INDEX_LIST_ITEM = "[data-" + HzNavbarComponent_1.PREFIX + "-index-list-item]";
-HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT = "[data-" + HzNavbarComponent_1.PREFIX + "-index-list-item-content]";
-HzNavbarComponent.CLASS_PAGE_VISITED = "hz-navbar__page--visited";
-HzNavbarComponent.CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
-HzNavbarComponent.CLASS_LIST_INDEX_DIALOG = "hz-navbar__index-list-dialog";
-HzNavbarComponent.DATA_PAGE = "hzNavbarPage";
-HzNavbarComponent.OPT_DIALOG_DEFAULTS = {
-    autoOpen: false
-};
-HzNavbarComponent._DEFAULTS = {
-    locale: {
-        "es": {
-            next: "Siguiente",
-            prev: "Anterior",
-            currentPage: "Página actual",
-            totalPages: "Páginas totales",
-            home: "Ir al inicio",
-            showIndex: "Mostrar índice",
-            index: "Índice"
-        }
-    },
-    defaultLang: "es"
-};
-HzNavbarComponent = HzNavbarComponent_1 = __decorate([
-    core_1.Component({
-        name: "HzNavbar",
-        dependencies: [
-            core_1.$,
-            core_1.EventEmitterFactory,
-            core_1.Navigator,
-            core_1.PageManager,
-            core_1.DataOptions
-        ]
-    })
-], HzNavbarComponent);
 exports.HzNavbarComponent = HzNavbarComponent;
-var HzNavbarComponent_1;
 //# sourceMappingURL=HzNavbarComponent.js.map
