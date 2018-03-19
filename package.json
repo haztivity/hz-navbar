@@ -1,6 +1,6 @@
 {
   "name": "@haztivity/hz-navbar",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "description": "Navbar component for haztivity",
   "main": "dist/HzNavbar.js",
   "module": "dist/HzNavbar.js",
