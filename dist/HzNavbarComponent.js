@@ -25,6 +25,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         _this._Navigator = _Navigator;
         _this._PageManager = _PageManager;
         _this._DataOptions = _DataOptions;
+        _this._progress = 0;
         _this._currentPageIndex = 0;
         _this._numPages = 0;
         return _this;
@@ -66,6 +67,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
             options.dialogClass = HzNavbarComponent_1.CLASS_LIST_EXIT_DIALOG;
         }
         this._$exitDialog.dialog(options);
+        this._exitDialog = this._$exitDialog.dialog("instance");
     };
     HzNavbarComponent.prototype.updatePaginator = function () {
         var numPages = this._PageManager.count();
@@ -81,7 +83,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
      * @returns {number}
      */
     HzNavbarComponent.prototype.progress = function (value) {
-        if (value) {
+        if (value != undefined) {
             value = parseFloat(value.toFixed(2));
             if (!isNaN(value)) {
                 if (value >= 0 && value <= 100) {
@@ -257,13 +259,16 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     };
     HzNavbarComponent.prototype._onExitClick = function (e) {
         var instance = e.data.instance;
-        instance._$exitDialog.dialog("open");
+        instance._exitDialog.open();
     };
     HzNavbarComponent.prototype._onCancelExit = function () {
-        this._$exitDialog.dialog("close");
+        this._exitDialog.close();
     };
     HzNavbarComponent.prototype._onConfirmExit = function () {
-        this._$exitDialog.dialog("close").dialog("destroy");
+        this._exitDialog.close();
+        this._exitDialog.destroy();
+        this._indexListDialog.close();
+        this._indexListDialog.destroy();
         core_1.ScoFactory.getCurrentSco().exit();
     };
     HzNavbarComponent.prototype._onIndexClick = function (e) {
@@ -284,6 +289,24 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         this._$progress.text(value + "%");
         this._$bar.css("transform", "scaleX(" + value / 100 + ")");
     };
+    HzNavbarComponent.prototype._disableActions = function () {
+        this._actionsDisabled = true;
+        this._$homeBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
+        this._$exitBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
+        this._$indexBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
+        this._indexListDialog.close();
+        this._indexListDialog.disable();
+        this._exitDialog.close();
+        this._exitDialog.disable();
+    };
+    HzNavbarComponent.prototype._enableActions = function () {
+        this._$homeBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
+        this._$exitBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
+        this._$indexBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
+        this._indexListDialog.enable();
+        this._exitDialog.enable();
+        this._actionsDisabled = false;
+    };
     /**
      * Invocado al comenzar el cambio de página. Deshabilita la navegación durante el proceso
      * @param e
@@ -294,6 +317,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.prototype._onPageChangeStart = function (e, newPage, oldPage) {
         if (!e.isDefaultPrevented()) {
             var instance = e.data.instance;
+            instance._disableActions();
             if (oldPage) {
                 var pageImplementation = instance._PageManager.getPage(oldPage.index), page = pageImplementation.getPage();
                 page.off("." + HzNavbarComponent_1.NAMESPACE);
@@ -345,12 +369,17 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.prototype._onPageChangeEnd = function (e, newPage, oldPage) {
         var instance = e.data.instance;
         instance._updatePagerButtonState();
-        instance.progress((instance._Navigator.getVisitedPages().length * 100) / instance._numPages);
         var pageImplementation = instance._Navigator.getCurrentPage(), page = pageImplementation.getPage();
-        page.off("." + HzNavbarComponent_1.NAMESPACE).on(core_1.PageController.ON_COMPLETE_CHANGE + "." + HzNavbarComponent_1.NAMESPACE, { instance: instance }, instance._onPageCompleteChange);
+        instance._enableActions();
+        if (pageImplementation.isCompleted()) {
+            instance.progress(instance._Navigator.getProgressPercentage());
+        }
+        else {
+            page.off("." + HzNavbarComponent_1.NAMESPACE).on(core_1.PageController.ON_COMPLETE_CHANGE + "." + HzNavbarComponent_1.NAMESPACE, { instance: instance }, instance._onPageCompleteChange);
+        }
     };
     /**
-     * Invocado al completarse la página. Actualiza el estado del botón siguiente
+     * Invocado al completarse la página. Actualiza el estado del botón siguiente y del % de avance
      * @param e
      * @param completed
      * @private
@@ -358,6 +387,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.prototype._onPageCompleteChange = function (e, completed) {
         if (completed) {
             var instance = e.data.instance;
+            instance.progress(instance._Navigator.getProgressPercentage());
             var pageImplementation = instance._Navigator.getCurrentPage(), page = pageImplementation.getPage();
             if (instance._PageManager.getPageIndex(page.getName()) !== instance._PageManager.count() - 1) {
                 if (pageImplementation.getController().isCompleted()) {
@@ -414,6 +444,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
     HzNavbarComponent.CLASS_LIST_INDEX_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     HzNavbarComponent.CLASS_LIST_EXIT_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
+    HzNavbarComponent.CLASS_DISABLED = "hz-navbar--disabled";
     HzNavbarComponent.DATA_PAGE = "hzNavbarPage";
     HzNavbarComponent.OPT_DIALOG_DEFAULTS = {
         autoOpen: false,

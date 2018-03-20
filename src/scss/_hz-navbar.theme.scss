@@ -45,7 +45,7 @@
                     transform: scale(1.2);
                 }
             }
-            &[disabled] {
+            &[disabled]:after {
                 opacity: 0.5;
                 cursor: default;
             }

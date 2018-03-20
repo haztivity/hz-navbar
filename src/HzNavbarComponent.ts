@@ -43,6 +43,7 @@ export class HzNavbarComponent extends ComponentController {
     public static readonly CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
     public static readonly CLASS_LIST_INDEX_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     public static readonly CLASS_LIST_EXIT_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
+    public static readonly CLASS_DISABLED = "hz-navbar--disabled";
     public static readonly DATA_PAGE = "hzNavbarPage";
     protected static readonly OPT_DIALOG_DEFAULTS = {
         autoOpen: false,
@@ -80,10 +81,12 @@ export class HzNavbarComponent extends ComponentController {
     protected _$numPages: JQuery;
     protected _$indexList: JQuery;
     protected _$indexListItemTemplate: JQuery;
-    protected _progress: number;
+    protected _progress: number = 0;
     protected _currentPageIndex: number = 0;
     protected _numPages: number = 0;
     protected _indexListDialog;
+    protected _exitDialog;
+    protected _actionsDisabled;
     constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager, protected _DataOptions) {
         super(_$, _EventEmitterFactory);
     }
@@ -122,7 +125,8 @@ export class HzNavbarComponent extends ComponentController {
         }else{
             options.dialogClass = HzNavbarComponent.CLASS_LIST_EXIT_DIALOG;
         }
-        this._$exitDialog.dialog(options)
+        this._$exitDialog.dialog(options);
+        this._exitDialog = this._$exitDialog.dialog("instance");
     }
     public updatePaginator() {
         let numPages = this._PageManager.count();
@@ -139,7 +143,7 @@ export class HzNavbarComponent extends ComponentController {
      * @returns {number}
      */
     public progress(value?: number): number {
-        if (value) {
+        if (value != undefined) {
             value = parseFloat(value.toFixed(2));
             if (!isNaN(value)) {
                 if (value >= 0 && value <= 100) {
@@ -345,13 +349,16 @@ export class HzNavbarComponent extends ComponentController {
     }
     protected _onExitClick(e) {
         let instance = e.data.instance;
-        instance._$exitDialog.dialog("open");
+        instance._exitDialog.open();
     }
     protected _onCancelExit(){
-        this._$exitDialog.dialog("close");
+        this._exitDialog.close();
     }
     protected _onConfirmExit(){
-        this._$exitDialog.dialog("close").dialog("destroy");
+        this._exitDialog.close();
+        this._exitDialog.destroy();
+        this._indexListDialog.close();
+        this._indexListDialog.destroy();
         ScoFactory.getCurrentSco().exit();
     }
     protected _onIndexClick(e) {
@@ -373,7 +380,24 @@ export class HzNavbarComponent extends ComponentController {
         this._$progress.text(`${value}%`);
         this._$bar.css("transform", `scaleX(${value / 100})`);
     }
-
+    protected _disableActions(){
+        this._actionsDisabled = true;
+        this._$homeBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
+        this._$exitBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
+        this._$indexBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
+        this._indexListDialog.close();
+        this._indexListDialog.disable();
+        this._exitDialog.close();
+        this._exitDialog.disable();
+    }
+    protected _enableActions(){
+        this._$homeBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
+        this._$exitBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
+        this._$indexBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
+        this._indexListDialog.enable();
+        this._exitDialog.enable();
+        this._actionsDisabled = false;
+    }
     /**
      * Invocado al comenzar el cambio de página. Deshabilita la navegación durante el proceso
      * @param e
@@ -384,6 +408,7 @@ export class HzNavbarComponent extends ComponentController {
     protected _onPageChangeStart(e, newPage: INavigatorPageData, oldPage: INavigatorPageData) {
         if (!e.isDefaultPrevented()) {
             let instance = e.data.instance;
+            instance._disableActions();
             if (oldPage) {
                 let pageImplementation = instance._PageManager.getPage(oldPage.index),
                     page = pageImplementation.getPage();
@@ -434,18 +459,22 @@ export class HzNavbarComponent extends ComponentController {
     protected _onPageChangeEnd(e, newPage: INavigatorPageData, oldPage: INavigatorPageData) {
         let instance = e.data.instance;
         instance._updatePagerButtonState();
-        instance.progress((instance._Navigator.getVisitedPages().length * 100) / instance._numPages);
         let pageImplementation = instance._Navigator.getCurrentPage(),
             page = pageImplementation.getPage();
-        page.off("." + HzNavbarComponent.NAMESPACE).on(
-            `${PageController.ON_COMPLETE_CHANGE}.${HzNavbarComponent.NAMESPACE}`,
-            {instance: instance},
-            instance._onPageCompleteChange
-        );
+        instance._enableActions();
+        if(pageImplementation.isCompleted()){
+            instance.progress(instance._Navigator.getProgressPercentage());
+        }else {
+            page.off("." + HzNavbarComponent.NAMESPACE).on(
+                `${PageController.ON_COMPLETE_CHANGE}.${HzNavbarComponent.NAMESPACE}`,
+                {instance: instance},
+                instance._onPageCompleteChange
+            );
+        }
     }
 
     /**
-     * Invocado al completarse la página. Actualiza el estado del botón siguiente
+     * Invocado al completarse la página. Actualiza el estado del botón siguiente y del % de avance
      * @param e
      * @param completed
      * @private
@@ -453,6 +482,7 @@ export class HzNavbarComponent extends ComponentController {
     protected _onPageCompleteChange(e, completed) {
         if (completed) {
             let instance = e.data.instance;
+            instance.progress(instance._Navigator.getProgressPercentage());
             let pageImplementation = instance._Navigator.getCurrentPage(),
                 page = pageImplementation.getPage();
             if (instance._PageManager.getPageIndex(page.getName()) !== instance._PageManager.count() - 1) {

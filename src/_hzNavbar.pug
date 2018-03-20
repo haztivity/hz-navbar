@@ -20,8 +20,8 @@ mixin hz-navbar()
                 span(data-hz-navbar-total, data-hz-navbar-content-to="title", data-hz-navbar-content="totalPages").hz-navbar__content.hz-navbar__total
             button(data-hz-navbar-next,data-hz-navbar-content="next",data-hz-navbar-content-to="title").hz-navbar__btn.hz-navbar__next
                 span(data-hz-navbar-content="next").hz-navbar__content
-        ul.hz-navbar__dialog.hz-navbar__index-list(data-hz-navbar-index-list)
+        ul.hz-navbar__dialog__body(data-hz-navbar-index-list)
             li.hz-navbar__index-item(data-hz-navbar-index-list-item)
                 a.hz-navbar__index-item-content(data-hz-navbar-index-list-item-content, href="javascript:void(0)")
-        div.hz-navbar__dialog.hz-navbar__exit-dialog(data-hz-navbar-exit-dialog)
+        div.hz-navbar__dialog__body(data-hz-navbar-exit-dialog)
             p(data-hz-navbar-content="exitMessage")
