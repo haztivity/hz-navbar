@@ -5,7 +5,7 @@
 import * as Prism "prismjs";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-scss";
-import "prismjs/components/prism-jade";
+import "prismjs/components/prism-pug";
 import {PageFactory, PageRegister, PageController} from "@haztivity/core";
 import template from "./page.pug";
 export let page: PageRegister = PageFactory.createPage(

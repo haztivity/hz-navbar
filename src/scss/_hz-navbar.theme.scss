@@ -18,13 +18,13 @@
     $TM-animation:$config_animate-mid,//tiempo de animación
     $TC-home--hover:$TC-home,//texto de home en hover
     $TC-index--hover:$TC-index,//texto de índice en hover
+    $TC-exit--hover:$TC-exit,
     $TC-home-icon:$TC-home,//icono de home
     $TC-index-icon:$TC-index,//icono de índice
     $TC-home-icon--hover:$TC-home-icon,//icono de home en hover
     $TC-index-icon--hover:$TC-index-icon,//icono de índice en hover
     $TC-exit-icon:$TC-exit,
-    $TC-exit--hover:$TC-exit,
-    $TC-exit-icon--hover:$TC-exit,
+    $TC-exit-icon--hover:$TC-exit-icon,
     $BC-dialog__header:$BC-bar//fondo cabecera dialogo
 ) {
     .hz-navbar {

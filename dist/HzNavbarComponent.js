@@ -36,7 +36,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         this._getElements();
         this.updateLocale();
         this._initExitDialog();
-        this.progress(0);
+        this.progress(this._Navigator.getProgressPercentage());
         this._assignEvents();
         this.updatePaginator();
     };
@@ -175,6 +175,10 @@ var HzNavbarComponent = /** @class */ (function (_super) {
                 var currentPage = this._PageManager.getPage(numPageIndex), pageRegister = currentPage.getPage();
                 var $page = this._$indexListItemTemplate.clone();
                 $page.find(HzNavbarComponent_1.QUERY_INDEX_LIST_ITEM_CONTENT).html(pageRegister._options.title);
+                $page.attr("data-page", pageRegister._options.name);
+                if (this._currentPageIndex == numPageIndex) {
+                    $page.addClass(HzNavbarComponent_1.CLASS_ACTIVE_PAGE);
+                }
                 if (currentPage._state.completed) {
                     $page.addClass(HzNavbarComponent_1.CLASS_PAGE_COMPLETED);
                 }
@@ -442,6 +446,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT = "[data-" + HzNavbarComponent_1.PREFIX + "-index-list-item-content]";
     HzNavbarComponent.CLASS_PAGE_VISITED = "hz-navbar__page--visited";
     HzNavbarComponent.CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
+    HzNavbarComponent.CLASS_ACTIVE_PAGE = "hz-navbar__page--active";
     HzNavbarComponent.CLASS_LIST_INDEX_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     HzNavbarComponent.CLASS_LIST_EXIT_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     HzNavbarComponent.CLASS_DISABLED = "hz-navbar--disabled";

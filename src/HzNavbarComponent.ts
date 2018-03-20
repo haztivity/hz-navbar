@@ -41,6 +41,7 @@ export class HzNavbarComponent extends ComponentController {
     public static readonly QUERY_INDEX_LIST_ITEM_CONTENT = `[data-${HzNavbarComponent.PREFIX}-index-list-item-content]`;
     public static readonly CLASS_PAGE_VISITED = "hz-navbar__page--visited";
     public static readonly CLASS_PAGE_COMPLETED = "hz-navbar__page--completed";
+    public static readonly CLASS_ACTIVE_PAGE = "hz-navbar__page--active";
     public static readonly CLASS_LIST_INDEX_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     public static readonly CLASS_LIST_EXIT_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     public static readonly CLASS_DISABLED = "hz-navbar--disabled";
@@ -96,7 +97,7 @@ export class HzNavbarComponent extends ComponentController {
         this._getElements();
         this.updateLocale();
         this._initExitDialog();
-        this.progress(0);
+        this.progress(this._Navigator.getProgressPercentage());
         this._assignEvents();
         this.updatePaginator();
     }
@@ -252,6 +253,10 @@ export class HzNavbarComponent extends ComponentController {
                     pageRegister = currentPage.getPage();
                 let $page: JQuery = this._$indexListItemTemplate.clone();
                 $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html(pageRegister._options.title);
+                $page.attr("data-page",pageRegister._options.name);
+                if(this._currentPageIndex == numPageIndex){
+                    $page.addClass(HzNavbarComponent.CLASS_ACTIVE_PAGE);
+                }
                 if (currentPage._state.completed) {
                     $page.addClass(HzNavbarComponent.CLASS_PAGE_COMPLETED);
                 } else if (currentPage._state.visited) {
