@@ -263,16 +263,24 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     };
     HzNavbarComponent.prototype._onExitClick = function (e) {
         var instance = e.data.instance;
-        instance._exitDialog.open();
+        if (instance._exitDialog) {
+            instance._exitDialog.open();
+        }
     };
     HzNavbarComponent.prototype._onCancelExit = function () {
-        this._exitDialog.close();
+        if (this._exitDialog) {
+            this._exitDialog.close();
+        }
     };
     HzNavbarComponent.prototype._onConfirmExit = function () {
-        this._exitDialog.close();
-        this._exitDialog.destroy();
-        this._indexListDialog.close();
-        this._indexListDialog.destroy();
+        if (this._exitDialog) {
+            this._exitDialog.close();
+            this._exitDialog.destroy();
+        }
+        if (this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.destroy();
+        }
         core_1.ScoFactory.getCurrentSco().exit();
     };
     HzNavbarComponent.prototype._onIndexClick = function (e) {
@@ -298,17 +306,25 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         this._$homeBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
         this._$exitBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
         this._$indexBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
-        this._indexListDialog.close();
-        this._indexListDialog.disable();
-        this._exitDialog.close();
-        this._exitDialog.disable();
+        if (this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.disable();
+        }
+        if (this._exitDialog) {
+            this._exitDialog.close();
+            this._exitDialog.disable();
+        }
     };
     HzNavbarComponent.prototype._enableActions = function () {
         this._$homeBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
         this._$exitBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
         this._$indexBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
-        this._indexListDialog.enable();
-        this._exitDialog.enable();
+        if (this._indexListDialog) {
+            this._indexListDialog.enable();
+        }
+        if (this._exitDialog) {
+            this._exitDialog.enable();
+        }
         this._actionsDisabled = false;
     };
     /**
