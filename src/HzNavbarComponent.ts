@@ -354,16 +354,24 @@ export class HzNavbarComponent extends ComponentController {
     }
     protected _onExitClick(e) {
         let instance = e.data.instance;
-        instance._exitDialog.open();
+        if(instance._exitDialog) {
+            instance._exitDialog.open();
+        }
     }
     protected _onCancelExit(){
-        this._exitDialog.close();
+        if(this._exitDialog) {
+            this._exitDialog.close();
+        }
     }
     protected _onConfirmExit(){
-        this._exitDialog.close();
-        this._exitDialog.destroy();
-        this._indexListDialog.close();
-        this._indexListDialog.destroy();
+        if(this._exitDialog) {
+            this._exitDialog.close();
+            this._exitDialog.destroy();
+        }
+        if(this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.destroy();
+        }
         ScoFactory.getCurrentSco().exit();
     }
     protected _onIndexClick(e) {
@@ -390,17 +398,25 @@ export class HzNavbarComponent extends ComponentController {
         this._$homeBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
         this._$exitBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
         this._$indexBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
-        this._indexListDialog.close();
-        this._indexListDialog.disable();
-        this._exitDialog.close();
-        this._exitDialog.disable();
+        if(this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.disable();
+        }
+        if(this._exitDialog) {
+            this._exitDialog.close();
+            this._exitDialog.disable();
+        }
     }
     protected _enableActions(){
         this._$homeBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
         this._$exitBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
         this._$indexBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
-        this._indexListDialog.enable();
-        this._exitDialog.enable();
+        if(this._indexListDialog) {
+            this._indexListDialog.enable();
+        }
+        if(this._exitDialog) {
+            this._exitDialog.enable();
+        }
         this._actionsDisabled = false;
     }
     /**
