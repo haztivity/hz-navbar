@@ -39,15 +39,18 @@
                 top: 0;
                 left: -99999em;
             }
-            &:not([disabled]) {
+            &:not([disabled]):not(.hz-navbar__btn--disabled) {
                 &:hover,
                 &:focus {
                     transform: scale(1.2);
                 }
             }
-            &[disabled]:after {
-                opacity: 0.5;
-                cursor: default;
+            &[disabled],
+            &.hz-navbar__btn--disabled{
+                &:after {
+                    opacity: 0.5;
+                    cursor: default;
+                }
             }
         }
         //progress
