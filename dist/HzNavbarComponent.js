@@ -147,7 +147,6 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         var result;
         if (this._indexListDialog) {
             result = this._indexListDialog.isOpen();
-            this._indexListDialog.open();
         }
         return result;
     };
@@ -163,6 +162,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
             var options = core_1.$.extend(true, {}, HzNavbarComponent_1.OPT_DIALOG_DEFAULTS, this._DataOptions.getDataOptions(this._$indexList, "dialog"));
             options.dialogClass = HzNavbarComponent_1.CLASS_LIST_INDEX_DIALOG;
             this._$indexList.dialog(options);
+            this._$indexList.on("dialogclose", { instance: this }, this._onDialogClosed);
             this._indexListDialog = this._$indexList.data("ui-dialog");
         }
     };
@@ -170,7 +170,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         if (this._$indexList && this._$indexList.length > 0 && this._$indexListItemTemplate && this._$indexListItemTemplate.length > 0) {
             this._$indexList.empty();
             var pages = [];
-            var numPages = this._PageManager.count(), previousState = void 0;
+            var numPages = this._PageManager.count();
             for (var numPageIndex = 0; numPageIndex < numPages; numPageIndex++) {
                 var currentPage = this._PageManager.getPage(numPageIndex), pageRegister = currentPage.getPage();
                 var $page = this._$indexListItemTemplate.clone();
@@ -185,13 +185,10 @@ var HzNavbarComponent = /** @class */ (function (_super) {
                 else if (currentPage._state.visited) {
                     $page.addClass(HzNavbarComponent_1.CLASS_PAGE_VISITED);
                 }
-                if (previousState == undefined || previousState.completed) {
-                    $page.data(HzNavbarComponent_1.DATA_PAGE, {
-                        name: pageRegister.getName(),
-                        index: numPageIndex
-                    });
-                }
-                previousState = currentPage._state;
+                $page.data(HzNavbarComponent_1.DATA_PAGE, {
+                    name: pageRegister.getName(),
+                    index: numPageIndex
+                });
                 pages.push($page);
             }
             this._$indexList.append(pages);
@@ -235,8 +232,13 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         e.preventDefault();
         var instance = e.data.instance, $item = core_1.$(this), page = $item.data(HzNavbarComponent_1.DATA_PAGE);
         if (page) {
-            instance.closeIndexList();
-            instance._Navigator.goTo(page.index);
+            if (e.ctrlKey) {
+                instance._Navigator.enableDev();
+            }
+            if (!!instance._Navigator.goTo(page.index)) {
+                instance.closeIndexList();
+            }
+            instance._Navigator.disableDev();
         }
     };
     /**
@@ -246,7 +248,14 @@ var HzNavbarComponent = /** @class */ (function (_super) {
      */
     HzNavbarComponent.prototype._onNextClick = function (e) {
         var instance = e.data.instance;
-        instance._Navigator.next();
+        if (!instance._Navigator.isDisabled() && !instance._nextDisabled) {
+            instance._Navigator.next();
+        }
+        else if (e.ctrlKey) {
+            instance._Navigator.enableDev();
+            instance._Navigator.next();
+            instance._Navigator.disableDev();
+        }
     };
     /**
      * Invocado al hacerse click en el botón anterior. Invoca a _Navigator#prev
@@ -255,7 +264,14 @@ var HzNavbarComponent = /** @class */ (function (_super) {
      */
     HzNavbarComponent.prototype._onPrevClick = function (e) {
         var instance = e.data.instance;
-        instance._Navigator.prev();
+        if (!instance._Navigator.isDisabled() && !instance._prevDisabled) {
+            instance._Navigator.prev();
+        }
+        else if (e.ctrlKey) {
+            instance._Navigator.enableDev();
+            instance._Navigator.prev();
+            instance._Navigator.disableDev();
+        }
     };
     HzNavbarComponent.prototype._onHomeClick = function (e) {
         var instance = e.data.instance;
@@ -263,24 +279,16 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     };
     HzNavbarComponent.prototype._onExitClick = function (e) {
         var instance = e.data.instance;
-        if (instance._exitDialog) {
-            instance._exitDialog.open();
-        }
+        instance._exitDialog.open();
     };
     HzNavbarComponent.prototype._onCancelExit = function () {
-        if (this._exitDialog) {
-            this._exitDialog.close();
-        }
+        this._exitDialog.close();
     };
     HzNavbarComponent.prototype._onConfirmExit = function () {
-        if (this._exitDialog) {
-            this._exitDialog.close();
-            this._exitDialog.destroy();
-        }
-        if (this._indexListDialog) {
-            this._indexListDialog.close();
-            this._indexListDialog.destroy();
-        }
+        this._exitDialog.close();
+        this._exitDialog.destroy();
+        this._indexListDialog.close();
+        this._indexListDialog.destroy();
         core_1.ScoFactory.getCurrentSco().exit();
     };
     HzNavbarComponent.prototype._onIndexClick = function (e) {
@@ -306,25 +314,17 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         this._$homeBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
         this._$exitBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
         this._$indexBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
-        if (this._indexListDialog) {
-            this._indexListDialog.close();
-            this._indexListDialog.disable();
-        }
-        if (this._exitDialog) {
-            this._exitDialog.close();
-            this._exitDialog.disable();
-        }
+        this._indexListDialog.close();
+        this._indexListDialog.disable();
+        this._exitDialog.close();
+        this._exitDialog.disable();
     };
     HzNavbarComponent.prototype._enableActions = function () {
         this._$homeBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
         this._$exitBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
         this._$indexBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
-        if (this._indexListDialog) {
-            this._indexListDialog.enable();
-        }
-        if (this._exitDialog) {
-            this._exitDialog.enable();
-        }
+        this._indexListDialog.enable();
+        this._exitDialog.enable();
         this._actionsDisabled = false;
     };
     /**
@@ -343,8 +343,10 @@ var HzNavbarComponent = /** @class */ (function (_super) {
                 page.off("." + HzNavbarComponent_1.NAMESPACE);
             }
             instance._setCurrentPage(newPage.index);
-            instance._$prevBtn.attr("disabled", "disabled");
-            instance._$nextBtn.attr("disabled", "disabled");
+            instance._$prevBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            instance._nextDisabled = true;
+            instance._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            instance._prevDisabled = true;
         }
     };
     /**
@@ -354,29 +356,39 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.prototype._updatePagerButtonState = function () {
         if (!this._Navigator.isDisabled()) {
             if (this._currentPageIndex === 0) {
-                this._$prevBtn.attr("disabled", "disabled");
-                this._$nextBtn.removeAttr("disabled");
+                this._$prevBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                this._prevDisabled = true;
+                this._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                this._nextDisabled = false;
             }
             else if (this._currentPageIndex === this._numPages - 1) {
-                this._$nextBtn.attr("disabled", "disabled");
-                this._$prevBtn.removeAttr("disabled");
+                this._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                this._nextDisabled = true;
+                this._$prevBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                this._prevDisabled = false;
             }
             else {
-                this._$nextBtn.removeAttr("disabled");
-                this._$prevBtn.removeAttr("disabled");
+                this._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                this._nextDisabled = false;
+                this._$prevBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                this._prevDisabled = false;
             }
             if (!this._$nextBtn.prop("disabled")) {
                 if (this._Navigator.getCurrentPage().getController().isCompleted()) {
-                    this._$nextBtn.removeAttr("disabled");
+                    this._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                    this._nextDisabled = false;
                 }
                 else {
-                    this._$nextBtn.attr("disabled", "disabled");
+                    this._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                    this._nextDisabled = true;
                 }
             }
         }
         else {
-            this._$prevBtn.attr("disabled", "disabled");
-            this._$nextBtn.attr("disabled", "disabled");
+            this._$prevBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            this._prevDisabled = true;
+            this._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            this._nextDisabled = true;
         }
     };
     /**
@@ -411,13 +423,25 @@ var HzNavbarComponent = /** @class */ (function (_super) {
             var pageImplementation = instance._Navigator.getCurrentPage(), page = pageImplementation.getPage();
             if (instance._PageManager.getPageIndex(page.getName()) !== instance._PageManager.count() - 1) {
                 if (pageImplementation.getController().isCompleted()) {
-                    instance._$nextBtn.removeAttr("disabled");
+                    instance._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                    instance._nextDisabled = false;
                 }
                 else {
-                    instance._$nextBtn.attr("disabled", "disabled");
+                    instance._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                    instance._nextDisabled = true;
                 }
             }
         }
+    };
+    /**
+     * Invocado al cerrarse el dialogo. Restablece estilos
+     */
+    HzNavbarComponent.prototype._onDialogClosed = function (e) {
+        var instance = e.data.instance;
+        instance._indexListDialog.uiDialog.css("top", "");
+        instance._indexListDialog.uiDialog.css("left", "");
+        instance._indexListDialog.uiDialog.css("bottom", "");
+        instance._indexListDialog.uiDialog.css("right", "");
     };
     /**
      * Establece el valor a la cantidad de páginas y actualiza el texto del elemento
@@ -466,11 +490,13 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.CLASS_LIST_INDEX_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     HzNavbarComponent.CLASS_LIST_EXIT_DIALOG = "hz-navbar__dialog hz-navbar__index-list-dialog";
     HzNavbarComponent.CLASS_DISABLED = "hz-navbar--disabled";
+    HzNavbarComponent.CLASS_BTN_DISABLED = "hz-navbar__btn--disabled";
     HzNavbarComponent.DATA_PAGE = "hzNavbarPage";
     HzNavbarComponent.OPT_DIALOG_DEFAULTS = {
         autoOpen: false,
         show: "fade",
-        hide: "fade"
+        hide: "fade",
+        position: { my: "center", at: "center" }
     };
     HzNavbarComponent._DEFAULTS = {
         locale: {
