@@ -11,6 +11,7 @@ import {
     ScoFactory
 } from "@haztivity/core";
 import "jquery-ui-dist/jquery-ui";
+import * as Hammer from "hammerjs";
 @Component(
     {
         name: "HzNavbar",
@@ -70,7 +71,11 @@ export class HzNavbarComponent extends ComponentController {
                 exitKo:"Cancelar"
             }
         },
-        defaultLang: "es"
+        touch:true,
+        maxRestTime:2000,
+        escapeVelocity:0.1,
+        defaultLang: "es",
+        reverseSwipeNavigation:true
     };
     protected _$nextBtn: JQuery;
     protected _$prevBtn: JQuery;
@@ -92,6 +97,7 @@ export class HzNavbarComponent extends ComponentController {
     protected _actionsDisabled;
     protected _nextDisabled:boolean;
     protected _prevDisabled:boolean;
+    protected _touchRegion;
     constructor(_$: JQueryStatic, _EventEmitterFactory, protected _Navigator: Navigator, protected _PageManager: PageManager, protected _DataOptions) {
         super(_$, _EventEmitterFactory);
     }
@@ -104,6 +110,61 @@ export class HzNavbarComponent extends ComponentController {
         this.progress(this._Navigator.getProgressPercentage());
         this._assignEvents();
         this.updatePaginator();
+        if(this._options.touch != false){
+            //this._touchRegion = new ZingTouch.Region(ScoFactory.getCurrentSco()._$context.get(0));
+            this.hammerManager = new Hammer.Manager(ScoFactory.getCurrentSco()._$context.get(0), {
+                touchAction: 'auto',
+                inputClass: Hammer.SUPPORT_POINTER_EVENTS ? Hammer.PointerEventInput : Hammer.TouchInput
+            });
+            this.hammerManager.add( new Hammer.Swipe({ direction: Hammer.DIRECTION_HORIZONTAL}) );
+            this.hammerManager.on("swipe", Hammer.bindFn(this._onSwipe, this));
+        }
+    }
+    protected _onSwipe(e){
+        debugger;
+
+        //if target is navbar
+
+        //else
+        //if X is 0-50, and direction is right
+        //else if x is window-50 and direction is lef
+
+        if(!this._Navigator.isDisabled()) {
+            // starting from left and counter clockwise
+            //       90
+            //   180     0/360
+            //      270
+            //right or down
+            let goTo;
+            if(this._$element.get(0) == e.target || this._$element.find(e.target).length > 0){
+                if (e.direction === Hammer.DIRECTION_RIGHT) {
+                    goTo = 1;
+                } else if(e.direction === Hammer.DIRECTION_LEFT){
+                    goTo = -1;
+                }
+            }else{
+                const delta_x = e.deltaX,
+                    x = e.changedPointers[0].clientX - delta_x,
+                    maxWidth = $(document.body).width();
+                if (x<=100) {
+                    // handle swipe from left edge e.t.c
+                    goTo = 1;
+                }else if(x>= maxWidth-100){
+                    // handle other case
+                    goTo = -1;
+                }
+            }
+            if(goTo != undefined){
+                if(this._options.reverseSwipeNavigation){
+                    goTo /= -1;
+                }
+                if(goTo === 1 && !this._nextDisabled){
+                    this._Navigator.next();
+                }else if(goTo === -1 && !this._prevDisabled){
+                    this._Navigator.prev();
+                }
+            }
+        }
     }
     protected _initExitDialog(){
         let locale = this._options.locale[this._options.lang] || this._options.locale[this._options.defaultLang];
@@ -379,8 +440,10 @@ export class HzNavbarComponent extends ComponentController {
     protected _onConfirmExit(){
         this._exitDialog.close();
         this._exitDialog.destroy();
-        this._indexListDialog.close();
-        this._indexListDialog.destroy();
+        if(this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.destroy();
+        }
         ScoFactory.getCurrentSco().exit();
     }
     protected _onIndexClick(e) {
@@ -407,17 +470,25 @@ export class HzNavbarComponent extends ComponentController {
         this._$homeBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
         this._$exitBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
         this._$indexBtn.addClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",true);
-        this._indexListDialog.close();
-        this._indexListDialog.disable();
-        this._exitDialog.close();
-        this._exitDialog.disable();
+        if(this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.disable();
+        }
+        if(this._exitDialog) {
+            this._exitDialog.close();
+            this._exitDialog.disable();
+        }
     }
     protected _enableActions(){
         this._$homeBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
         this._$exitBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
         this._$indexBtn.removeClass(HzNavbarComponent.CLASS_DISABLED).prop("disabled",false);
-        this._indexListDialog.enable();
-        this._exitDialog.enable();
+        if(this._indexListDialog) {
+            this._indexListDialog.enable();
+        }
+        if(this._exitDialog) {
+            this._exitDialog.enable();
+        }
         this._actionsDisabled = false;
     }
     /**

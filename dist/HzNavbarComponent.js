@@ -18,6 +18,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@haztivity/core");
 require("jquery-ui-dist/jquery-ui");
+var Hammer = require("hammerjs");
 var HzNavbarComponent = /** @class */ (function (_super) {
     __extends(HzNavbarComponent, _super);
     function HzNavbarComponent(_$, _EventEmitterFactory, _Navigator, _PageManager, _DataOptions) {
@@ -39,6 +40,60 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         this.progress(this._Navigator.getProgressPercentage());
         this._assignEvents();
         this.updatePaginator();
+        if (this._options.touch != false) {
+            //this._touchRegion = new ZingTouch.Region(ScoFactory.getCurrentSco()._$context.get(0));
+            this.hammerManager = new Hammer.Manager(core_1.ScoFactory.getCurrentSco()._$context.get(0), {
+                touchAction: 'auto',
+                inputClass: Hammer.SUPPORT_POINTER_EVENTS ? Hammer.PointerEventInput : Hammer.TouchInput
+            });
+            this.hammerManager.add(new Hammer.Swipe({ direction: Hammer.DIRECTION_HORIZONTAL }));
+            this.hammerManager.on("swipe", Hammer.bindFn(this._onSwipe, this));
+        }
+    };
+    HzNavbarComponent.prototype._onSwipe = function (e) {
+        debugger;
+        //if target is navbar
+        //else
+        //if X is 0-50, and direction is right
+        //else if x is window-50 and direction is lef
+        if (!this._Navigator.isDisabled()) {
+            // starting from left and counter clockwise
+            //       90
+            //   180     0/360
+            //      270
+            //right or down
+            var goTo = void 0;
+            if (this._$element.get(0) == e.target || this._$element.find(e.target).length > 0) {
+                if (e.direction === Hammer.DIRECTION_RIGHT) {
+                    goTo = 1;
+                }
+                else if (e.direction === Hammer.DIRECTION_LEFT) {
+                    goTo = -1;
+                }
+            }
+            else {
+                var delta_x = e.deltaX, x = e.changedPointers[0].clientX - delta_x, maxWidth = core_1.$(document.body).width();
+                if (x <= 100) {
+                    // handle swipe from left edge e.t.c
+                    goTo = 1;
+                }
+                else if (x >= maxWidth - 100) {
+                    // handle other case
+                    goTo = -1;
+                }
+            }
+            if (goTo != undefined) {
+                if (this._options.reverseSwipeNavigation) {
+                    goTo /= -1;
+                }
+                if (goTo === 1 && !this._nextDisabled) {
+                    this._Navigator.next();
+                }
+                else if (goTo === -1 && !this._prevDisabled) {
+                    this._Navigator.prev();
+                }
+            }
+        }
     };
     HzNavbarComponent.prototype._initExitDialog = function () {
         var locale = this._options.locale[this._options.lang] || this._options.locale[this._options.defaultLang];
@@ -287,8 +342,10 @@ var HzNavbarComponent = /** @class */ (function (_super) {
     HzNavbarComponent.prototype._onConfirmExit = function () {
         this._exitDialog.close();
         this._exitDialog.destroy();
-        this._indexListDialog.close();
-        this._indexListDialog.destroy();
+        if (this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.destroy();
+        }
         core_1.ScoFactory.getCurrentSco().exit();
     };
     HzNavbarComponent.prototype._onIndexClick = function (e) {
@@ -314,17 +371,25 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         this._$homeBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
         this._$exitBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
         this._$indexBtn.addClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", true);
-        this._indexListDialog.close();
-        this._indexListDialog.disable();
-        this._exitDialog.close();
-        this._exitDialog.disable();
+        if (this._indexListDialog) {
+            this._indexListDialog.close();
+            this._indexListDialog.disable();
+        }
+        if (this._exitDialog) {
+            this._exitDialog.close();
+            this._exitDialog.disable();
+        }
     };
     HzNavbarComponent.prototype._enableActions = function () {
         this._$homeBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
         this._$exitBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
         this._$indexBtn.removeClass(HzNavbarComponent_1.CLASS_DISABLED).prop("disabled", false);
-        this._indexListDialog.enable();
-        this._exitDialog.enable();
+        if (this._indexListDialog) {
+            this._indexListDialog.enable();
+        }
+        if (this._exitDialog) {
+            this._exitDialog.enable();
+        }
         this._actionsDisabled = false;
     };
     /**
@@ -515,7 +580,11 @@ var HzNavbarComponent = /** @class */ (function (_super) {
                 exitKo: "Cancelar"
             }
         },
-        defaultLang: "es"
+        touch: true,
+        maxRestTime: 2000,
+        escapeVelocity: 0.1,
+        defaultLang: "es",
+        reverseSwipeNavigation: true
     };
     HzNavbarComponent = HzNavbarComponent_1 = __decorate([
         core_1.Component({
