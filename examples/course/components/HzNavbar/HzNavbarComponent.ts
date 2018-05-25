@@ -50,6 +50,8 @@ export class HzNavbarComponent extends ComponentController {
     public static readonly DATA_PAGE = "hzNavbarPage";
     protected static readonly OPT_DIALOG_DEFAULTS = {
         autoOpen: false,
+        draggable:false,
+        resizable:false,
         show:"fade",
         hide:"fade",
         position:{my:"center",at:"center"}
@@ -281,9 +283,9 @@ export class HzNavbarComponent extends ComponentController {
         return result;
     }
 
-    public openIndexList() {
+    public openIndexList(advanced=false) {
         if (this._indexListDialog) {
-            this.updateIndex();
+            this.updateIndex(advanced);
             this._indexListDialog.open();
         }
     }
@@ -307,7 +309,7 @@ export class HzNavbarComponent extends ComponentController {
         }
     }
 
-    public updateIndex() {
+    public updateIndex(advanced=false) {
         if (this._$indexList && this._$indexList.length > 0 && this._$indexListItemTemplate && this._$indexListItemTemplate.length > 0) {
             this._$indexList.empty();
             let pages = [];
@@ -316,7 +318,7 @@ export class HzNavbarComponent extends ComponentController {
                 let currentPage = this._PageManager.getPage(numPageIndex),
                     pageRegister = currentPage.getPage();
                 let $page: JQuery = this._$indexListItemTemplate.clone();
-                $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html(pageRegister._options.title);
+                $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html((advanced ? pageRegister.getName()+" - " : "" )+  pageRegister._options.title);
                 $page.attr("data-page",pageRegister._options.name);
                 if(this._currentPageIndex == numPageIndex){
                     $page.addClass(HzNavbarComponent.CLASS_ACTIVE_PAGE);
@@ -385,7 +387,7 @@ export class HzNavbarComponent extends ComponentController {
             $item = $(this),
             page = $item.data(HzNavbarComponent.DATA_PAGE);
         if (page) {
-            if(e.ctrlKey){
+            if(e.altKey){
                 instance._Navigator.enableDev();
             }
             if(!!instance._Navigator.goTo(page.index)){
@@ -403,7 +405,7 @@ export class HzNavbarComponent extends ComponentController {
         let instance = e.data.instance;
         if(!instance._Navigator.isDisabled() && !instance._nextDisabled) {
             instance._Navigator.next();
-        }else if(e.ctrlKey){
+        }else if(e.altKey){
             instance._Navigator.enableDev();
             instance._Navigator.next();
             instance._Navigator.disableDev();
@@ -419,7 +421,7 @@ export class HzNavbarComponent extends ComponentController {
         let instance = e.data.instance;
         if(!instance._Navigator.isDisabled() && !instance._prevDisabled) {
             instance._Navigator.prev();
-        }else if(e.ctrlKey){
+        }else if(e.altKey){
             instance._Navigator.enableDev();
             instance._Navigator.prev();
             instance._Navigator.disableDev();
@@ -451,7 +453,7 @@ export class HzNavbarComponent extends ComponentController {
         if (instance.indexListIsOpen()) {
             instance.closeIndexList();
         } else {
-            instance.openIndexList();
+            instance.openIndexList(e.altKey);
         }
     }
 
