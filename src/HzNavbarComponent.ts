@@ -377,6 +377,8 @@ export class HzNavbarComponent extends ComponentController {
         );
         this._Navigator.on(Navigator.ON_DISABLE, {instance: this}, this._onDisabled);
         this._Navigator.on(Navigator.ON_ENABLE, {instance: this}, this._onEnabled);
+        this._Navigator.on(Navigator.ON_NEXT_DISABLE, {instance: this}, this._onNextDisabledChange);
+        this._Navigator.on(Navigator.ON_NEXT_ENABLE, {instance: this}, this._onNextDisabledChange);
         this._Navigator.on(Navigator.ON_CHANGE_PAGE_START, {instance: this}, this._onPageChangeStart);
         this._Navigator.on(Navigator.ON_CHANGE_PAGE_END, {instance: this}, this._onPageChangeEnd);
     }
@@ -516,43 +518,41 @@ export class HzNavbarComponent extends ComponentController {
             instance._prevDisabled = true;
         }
     }
-
+    protected _onNextDisabledChange(e){
+        e.data.instance._updateNextButtonState();
+    }
+    protected _updateNextButtonState(){
+        this._setDisabledStylesForNext(this._Navigator.isDisabled() || this._Navigator.isNextDisabled() || this._currentPageIndex == this._numPages - 1);
+    }
+    protected _setDisabledStylesForNext(disabled){
+        if(disabled){
+            this._$nextBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
+            this._nextDisabled = true;
+        }else{
+            this._$nextBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
+            this._nextDisabled = false;
+        }
+    }
+    protected _setDisabledStylesForPrev(disabled){
+        if(disabled){
+            this._$prevBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
+            this._prevDisabled = true;
+        }else{
+            this._$prevBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
+            this._prevDisabled = false;
+        }
+    }
     /**
      * Establece los estados de los botones de navegación en base a los datos de Navigator
      * @private
      */
     protected _updatePagerButtonState() {
         if (!this._Navigator.isDisabled()) {
-            if (this._currentPageIndex === 0) {
-                this._$prevBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                this._prevDisabled = true;
-                this._$nextBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                this._nextDisabled = false;
-            } else if (this._currentPageIndex === this._numPages - 1) {
-                this._$nextBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                this._nextDisabled = true;
-                this._$prevBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                this._prevDisabled = false;
-            } else {
-                this._$nextBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                this._nextDisabled = false;
-                this._$prevBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                this._prevDisabled = false;
-            }
-            if (!this._$nextBtn.prop("disabled")) {
-                if (this._Navigator.getCurrentPage().getController().isCompleted()) {
-                    this._$nextBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                    this._nextDisabled = false;
-                } else {
-                    this._$nextBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-                    this._nextDisabled = true;
-                }
-            }
+            this._setDisabledStylesForPrev(this._currentPageIndex === 0);
+            this._updateNextButtonState();
         } else {
-            this._$prevBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-            this._prevDisabled = true;
-            this._$nextBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
-            this._nextDisabled = true;
+            this._setDisabledStylesForNext(true);
+            this._setDisabledStylesForPrev(true);
         }
     }
 
@@ -565,18 +565,18 @@ export class HzNavbarComponent extends ComponentController {
      */
     protected _onPageChangeEnd(e, newPage: INavigatorPageData, oldPage: INavigatorPageData) {
         let instance = e.data.instance;
-        instance._updatePagerButtonState();
+        //instance._updatePagerButtonState();
         let pageImplementation = instance._Navigator.getCurrentPage(),
             page = pageImplementation.getPage();
         instance._enableActions();
         if(pageImplementation.isCompleted()){
             instance.progress(instance._Navigator.getProgressPercentage());
         }else {
-            page.off("." + HzNavbarComponent.NAMESPACE).on(
+            page.off("." + HzNavbarComponent.NAMESPACE)/*.on(
                 `${PageController.ON_COMPLETE_CHANGE}.${HzNavbarComponent.NAMESPACE}`,
                 {instance: instance},
                 instance._onPageCompleteChange
-            );
+            );*/
         }
     }
 

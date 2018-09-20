@@ -34,13 +34,14 @@
     "@types/string": "0.0.29",
     "autoprefixer": "^8.2.0",
     "commander": "^2.15.1",
+    "jstransformer-markdown-it": "^2.0.0",
     "merge2": "^1.2.1",
+    "node-sass": "^4.9.3",
     "postcss": "^6.0.21",
+    "prismjs": "^1.14.0",
     "pug": "^2.0.3",
     "require-dir": "^1.0.0",
-    "typescript": "^2.8.1",
-    "jstransformer-markdown-it": "^2.0.0",
-    "prismjs": "^1.14.0"
+    "typescript": "^2.8.1"
   },
   "directories": {
     "typings": "src"
