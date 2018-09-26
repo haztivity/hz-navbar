@@ -12,7 +12,8 @@ export let page: PageRegister = PageFactory.createPage(
         title: "Manipulation",
         name: "6612",
         resources: [],
-        template: template
+        template: template,
+        isHeader:false
     }
 );
 page.on(

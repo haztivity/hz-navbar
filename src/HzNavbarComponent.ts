@@ -318,23 +318,28 @@ export class HzNavbarComponent extends ComponentController {
                 let currentPage = this._PageManager.getPage(numPageIndex),
                     pageRegister = currentPage.getPage();
                 let $page: JQuery = this._$indexListItemTemplate.clone();
-                $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html((advanced ? pageRegister.getName()+" - " : "" )+  pageRegister._options.title);
-                $page.attr("data-page",pageRegister._options.name);
-                if(this._currentPageIndex == numPageIndex){
-                    $page.addClass(HzNavbarComponent.CLASS_ACTIVE_PAGE);
-                }
-                if (currentPage._state.completed) {
-                    $page.addClass(HzNavbarComponent.CLASS_PAGE_COMPLETED);
-                } else if (currentPage._state.visited) {
-                    $page.addClass(HzNavbarComponent.CLASS_PAGE_VISITED);
-                }
-                $page.data(
-                    HzNavbarComponent.DATA_PAGE, {
-                        name: pageRegister.getName(),
-                        index: numPageIndex
+                let options = pageRegister.getOptions();
+                if(options.isHeader != false) {
+                    $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html((advanced
+                                                                                      ? pageRegister.getName() + " - "
+                                                                                      : "") + options.title);
+                    $page.attr("data-page", options.name);
+                    if (this._currentPageIndex == numPageIndex) {
+                        $page.addClass(HzNavbarComponent.CLASS_ACTIVE_PAGE);
                     }
-                );
-                pages.push($page);
+                    if (currentPage._state.completed) {
+                        $page.addClass(HzNavbarComponent.CLASS_PAGE_COMPLETED);
+                    } else if (currentPage._state.visited) {
+                        $page.addClass(HzNavbarComponent.CLASS_PAGE_VISITED);
+                    }
+                    $page.data(
+                        HzNavbarComponent.DATA_PAGE, {
+                            name: pageRegister.getName(),
+                            index: numPageIndex
+                        }
+                    );
+                    pages.push($page);
+                }
             }
             this._$indexList.append(pages);
         }
