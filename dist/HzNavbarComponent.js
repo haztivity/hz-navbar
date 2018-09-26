@@ -231,22 +231,27 @@ var HzNavbarComponent = /** @class */ (function (_super) {
             for (var numPageIndex = 0; numPageIndex < numPages; numPageIndex++) {
                 var currentPage = this._PageManager.getPage(numPageIndex), pageRegister = currentPage.getPage();
                 var $page = this._$indexListItemTemplate.clone();
-                $page.find(HzNavbarComponent_1.QUERY_INDEX_LIST_ITEM_CONTENT).html((advanced ? pageRegister.getName() + " - " : "") + pageRegister._options.title);
-                $page.attr("data-page", pageRegister._options.name);
-                if (this._currentPageIndex == numPageIndex) {
-                    $page.addClass(HzNavbarComponent_1.CLASS_ACTIVE_PAGE);
+                var options = pageRegister.getOptions();
+                if (options.isHeader != false) {
+                    $page.find(HzNavbarComponent_1.QUERY_INDEX_LIST_ITEM_CONTENT).html((advanced
+                        ? pageRegister.getName() + " - "
+                        : "") + options.title);
+                    $page.attr("data-page", options.name);
+                    if (this._currentPageIndex == numPageIndex) {
+                        $page.addClass(HzNavbarComponent_1.CLASS_ACTIVE_PAGE);
+                    }
+                    if (currentPage._state.completed) {
+                        $page.addClass(HzNavbarComponent_1.CLASS_PAGE_COMPLETED);
+                    }
+                    else if (currentPage._state.visited) {
+                        $page.addClass(HzNavbarComponent_1.CLASS_PAGE_VISITED);
+                    }
+                    $page.data(HzNavbarComponent_1.DATA_PAGE, {
+                        name: pageRegister.getName(),
+                        index: numPageIndex
+                    });
+                    pages.push($page);
                 }
-                if (currentPage._state.completed) {
-                    $page.addClass(HzNavbarComponent_1.CLASS_PAGE_COMPLETED);
-                }
-                else if (currentPage._state.visited) {
-                    $page.addClass(HzNavbarComponent_1.CLASS_PAGE_VISITED);
-                }
-                $page.data(HzNavbarComponent_1.DATA_PAGE, {
-                    name: pageRegister.getName(),
-                    index: numPageIndex
-                });
-                pages.push($page);
             }
             this._$indexList.append(pages);
         }
@@ -282,6 +287,8 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         this._$indexList.on("click." + HzNavbarComponent_1.NAMESPACE, HzNavbarComponent_1.QUERY_INDEX_LIST_ITEM, { instance: this }, this._onIndexListItemClick);
         this._Navigator.on(core_1.Navigator.ON_DISABLE, { instance: this }, this._onDisabled);
         this._Navigator.on(core_1.Navigator.ON_ENABLE, { instance: this }, this._onEnabled);
+        this._Navigator.on(core_1.Navigator.ON_NEXT_DISABLE, { instance: this }, this._onNextDisabledChange);
+        this._Navigator.on(core_1.Navigator.ON_NEXT_ENABLE, { instance: this }, this._onNextDisabledChange);
         this._Navigator.on(core_1.Navigator.ON_CHANGE_PAGE_START, { instance: this }, this._onPageChangeStart);
         this._Navigator.on(core_1.Navigator.ON_CHANGE_PAGE_END, { instance: this }, this._onPageChangeEnd);
     };
@@ -416,46 +423,44 @@ var HzNavbarComponent = /** @class */ (function (_super) {
             instance._prevDisabled = true;
         }
     };
+    HzNavbarComponent.prototype._onNextDisabledChange = function (e) {
+        e.data.instance._updateNextButtonState();
+    };
+    HzNavbarComponent.prototype._updateNextButtonState = function () {
+        this._setDisabledStylesForNext(this._Navigator.isDisabled() || this._Navigator.isNextDisabled() || this._currentPageIndex == this._numPages - 1);
+    };
+    HzNavbarComponent.prototype._setDisabledStylesForNext = function (disabled) {
+        if (disabled) {
+            this._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            this._nextDisabled = true;
+        }
+        else {
+            this._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            this._nextDisabled = false;
+        }
+    };
+    HzNavbarComponent.prototype._setDisabledStylesForPrev = function (disabled) {
+        if (disabled) {
+            this._$prevBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            this._prevDisabled = true;
+        }
+        else {
+            this._$prevBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+            this._prevDisabled = false;
+        }
+    };
     /**
      * Establece los estados de los botones de navegación en base a los datos de Navigator
      * @private
      */
     HzNavbarComponent.prototype._updatePagerButtonState = function () {
         if (!this._Navigator.isDisabled()) {
-            if (this._currentPageIndex === 0) {
-                this._$prevBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                this._prevDisabled = true;
-                this._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                this._nextDisabled = false;
-            }
-            else if (this._currentPageIndex === this._numPages - 1) {
-                this._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                this._nextDisabled = true;
-                this._$prevBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                this._prevDisabled = false;
-            }
-            else {
-                this._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                this._nextDisabled = false;
-                this._$prevBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                this._prevDisabled = false;
-            }
-            if (!this._$nextBtn.prop("disabled")) {
-                if (this._Navigator.getCurrentPage().getController().isCompleted()) {
-                    this._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                    this._nextDisabled = false;
-                }
-                else {
-                    this._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-                    this._nextDisabled = true;
-                }
-            }
+            this._setDisabledStylesForPrev(this._currentPageIndex === 0);
+            this._updateNextButtonState();
         }
         else {
-            this._$prevBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-            this._prevDisabled = true;
-            this._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
-            this._nextDisabled = true;
+            this._setDisabledStylesForNext(true);
+            this._setDisabledStylesForPrev(true);
         }
     };
     /**
@@ -467,14 +472,18 @@ var HzNavbarComponent = /** @class */ (function (_super) {
      */
     HzNavbarComponent.prototype._onPageChangeEnd = function (e, newPage, oldPage) {
         var instance = e.data.instance;
-        instance._updatePagerButtonState();
+        //instance._updatePagerButtonState();
         var pageImplementation = instance._Navigator.getCurrentPage(), page = pageImplementation.getPage();
         instance._enableActions();
         if (pageImplementation.isCompleted()) {
             instance.progress(instance._Navigator.getProgressPercentage());
         }
         else {
-            page.off("." + HzNavbarComponent_1.NAMESPACE).on(core_1.PageController.ON_COMPLETE_CHANGE + "." + HzNavbarComponent_1.NAMESPACE, { instance: instance }, instance._onPageCompleteChange);
+            page.off("." + HzNavbarComponent_1.NAMESPACE); /*.on(
+                `${PageController.ON_COMPLETE_CHANGE}.${HzNavbarComponent.NAMESPACE}`,
+                {instance: instance},
+                instance._onPageCompleteChange
+            );*/
         }
     };
     /**
