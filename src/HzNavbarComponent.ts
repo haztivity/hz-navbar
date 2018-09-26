@@ -319,10 +319,16 @@ export class HzNavbarComponent extends ComponentController {
                     pageRegister = currentPage.getPage();
                 let $page: JQuery = this._$indexListItemTemplate.clone();
                 let options = pageRegister.getOptions();
-                if(options.isHeader != false) {
-                    $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html((advanced
-                                                                                      ? pageRegister.getName() + " - "
-                                                                                      : "") + options.title);
+                if(options.isHeader != false || advanced) {
+                    let prefix = "";
+                    if(advanced){
+                        prefix = pageRegister.getName();
+                        if(!options.isHeader){
+                            prefix+="["+prefix+"]";
+                        }
+                        prefix+= " - ";
+                    }
+                    $page.find(HzNavbarComponent.QUERY_INDEX_LIST_ITEM_CONTENT).html(prefix + options.title);
                     $page.attr("data-page", options.name);
                     if (this._currentPageIndex == numPageIndex) {
                         $page.addClass(HzNavbarComponent.CLASS_ACTIVE_PAGE);
