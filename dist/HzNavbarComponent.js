@@ -232,10 +232,16 @@ var HzNavbarComponent = /** @class */ (function (_super) {
                 var currentPage = this._PageManager.getPage(numPageIndex), pageRegister = currentPage.getPage();
                 var $page = this._$indexListItemTemplate.clone();
                 var options = pageRegister.getOptions();
-                if (options.isHeader != false) {
-                    $page.find(HzNavbarComponent_1.QUERY_INDEX_LIST_ITEM_CONTENT).html((advanced
-                        ? pageRegister.getName() + " - "
-                        : "") + options.title);
+                if (options.isHeader != false || advanced) {
+                    var prefix = "";
+                    if (advanced) {
+                        prefix = pageRegister.getName();
+                        if (!options.isHeader) {
+                            prefix += "[" + prefix + "]";
+                        }
+                        prefix += " - ";
+                    }
+                    $page.find(HzNavbarComponent_1.QUERY_INDEX_LIST_ITEM_CONTENT).html(prefix + options.title);
                     $page.attr("data-page", options.name);
                     if (this._currentPageIndex == numPageIndex) {
                         $page.addClass(HzNavbarComponent_1.CLASS_ACTIVE_PAGE);
@@ -479,11 +485,7 @@ var HzNavbarComponent = /** @class */ (function (_super) {
             instance.progress(instance._Navigator.getProgressPercentage());
         }
         else {
-            page.off("." + HzNavbarComponent_1.NAMESPACE); /*.on(
-                `${PageController.ON_COMPLETE_CHANGE}.${HzNavbarComponent.NAMESPACE}`,
-                {instance: instance},
-                instance._onPageCompleteChange
-            );*/
+            page.off("." + HzNavbarComponent_1.NAMESPACE).on(core_1.PageController.ON_COMPLETE_CHANGE + "." + HzNavbarComponent_1.NAMESPACE, { instance: instance }, instance._onPageCompleteChange);
         }
     };
     /**
@@ -496,17 +498,17 @@ var HzNavbarComponent = /** @class */ (function (_super) {
         if (completed) {
             var instance = e.data.instance;
             instance.progress(instance._Navigator.getProgressPercentage());
-            var pageImplementation = instance._Navigator.getCurrentPage(), page = pageImplementation.getPage();
+            /*let pageImplementation = instance._Navigator.getCurrentPage(),
+                page = pageImplementation.getPage();
             if (instance._PageManager.getPageIndex(page.getName()) !== instance._PageManager.count() - 1) {
                 if (pageImplementation.getController().isCompleted()) {
-                    instance._$nextBtn.removeClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                    instance._$nextBtn.removeClass(HzNavbarComponent.CLASS_BTN_DISABLED);
                     instance._nextDisabled = false;
-                }
-                else {
-                    instance._$nextBtn.addClass(HzNavbarComponent_1.CLASS_BTN_DISABLED);
+                } else {
+                    instance._$nextBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
                     instance._nextDisabled = true;
                 }
-            }
+            }*/
         }
     };
     /**

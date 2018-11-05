@@ -583,11 +583,11 @@ export class HzNavbarComponent extends ComponentController {
         if(pageImplementation.isCompleted()){
             instance.progress(instance._Navigator.getProgressPercentage());
         }else {
-            page.off("." + HzNavbarComponent.NAMESPACE)/*.on(
+            page.off("." + HzNavbarComponent.NAMESPACE).on(
                 `${PageController.ON_COMPLETE_CHANGE}.${HzNavbarComponent.NAMESPACE}`,
                 {instance: instance},
                 instance._onPageCompleteChange
-            );*/
+            );
         }
     }
 
@@ -601,7 +601,7 @@ export class HzNavbarComponent extends ComponentController {
         if (completed) {
             let instance = e.data.instance;
             instance.progress(instance._Navigator.getProgressPercentage());
-            let pageImplementation = instance._Navigator.getCurrentPage(),
+            /*let pageImplementation = instance._Navigator.getCurrentPage(),
                 page = pageImplementation.getPage();
             if (instance._PageManager.getPageIndex(page.getName()) !== instance._PageManager.count() - 1) {
                 if (pageImplementation.getController().isCompleted()) {
@@ -611,7 +611,7 @@ export class HzNavbarComponent extends ComponentController {
                     instance._$nextBtn.addClass(HzNavbarComponent.CLASS_BTN_DISABLED);
                     instance._nextDisabled = true;
                 }
-            }
+            }*/
         }
     }
 
